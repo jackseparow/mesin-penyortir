@@ -71,8 +71,8 @@
     }
 
     .brand-title p {
-      font-size: 0.8rem;
-      opacity: 0.9;
+      font-size: 0.85rem;
+      opacity: 0.95;
     }
 
     .reset-app-btn {
@@ -175,7 +175,7 @@
     }
 
     .card-drag-sample {
-      width: 260px;
+      width: 280px;
       background: #ffffff;
       border: 3px solid #81c784;
       border-radius: 16px;
@@ -194,12 +194,16 @@
 
     .item-icon {
       font-size: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .item-title {
       font-weight: bold;
       font-size: 1.2rem;
       margin: 6px 0;
+      text-align: center;
     }
 
     .attributes-list {
@@ -476,12 +480,12 @@
 
   <!-- Header & Branding -->
   <header>
-    <!-- Kiri Atas: Logo BBGTK DIY -->
+    <!-- Kiri Atas: Logo BBGTK DIY & Judul -->
     <div class="brand-left">
       <img src="bbgtk diy logo.png" alt="Logo BBGTK DIY" class="logo-img" onerror="this.src='https://via.placeholder.com/120x48?text=BBGTK+DIY'">
       <div class="brand-title">
-        <h1>Mesin Penyortir AI</h1>
-        <p>Edukasi AI Anak - Klasifikasi & Data Latih</p>
+        <h1>Mesin Penyortir Buah dan Sayur</h1>
+        <p>Melatih mesin cerdas penyortir buah dan sayur</p>
       </div>
     </div>
 
@@ -531,7 +535,7 @@
         </div>
 
         <div style="font-size:0.85rem; color:#666;">
-          Sampel Ke- <span id="sample-count-text">1</span> dari <span id="sample-total-text">20</span> | Data Latih Terkumpul: <span id="trained-count-text" style="font-weight:bold; color:#2e7d32;">0</span>
+          Sampel Ke- <span id="sample-count-text">1</span> dari <span id="sample-total-text">46</span> | Data Latih Terkumpul: <span id="trained-count-text" style="font-weight:bold; color:#2e7d32;">0</span>
         </div>
 
         <!-- Keranjang Kategori Drop Zone -->
@@ -549,11 +553,11 @@
             <div class="basket-items-flex" id="basket-fase1-sayur_daun"></div>
           </div>
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'sayur_umbi')" onclick="clickAssign('sayur_umbi')">
-            <div class="basket-header">🥕 Sayur Umbi / Biji</div>
+            <div class="basket-header">🥕 Sayur Umbi / Bumbu</div>
             <div class="basket-items-flex" id="basket-fase1-sayur_umbi"></div>
           </div>
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'bukan_makanan')" onclick="clickAssign('bukan_makanan')">
-            <div class="basket-header">👟 Bukan Buah / Sayur</div>
+            <div class="basket-header">📦 Sampah Panen / Olahan / Lainnya</div>
             <div class="basket-items-flex" id="basket-fase1-bukan_makanan"></div>
           </div>
         </div>
@@ -563,7 +567,7 @@
     <!-- FASE 2: BAN BERJALAN & MESIN DI TENGAH -->
     <section id="phase2" class="phase-panel">
       <div class="instruction-box">
-        <strong>Tahap 2: Latih AI pada Ban Berjalan.</strong> Objek mengalir dari kiri ke tengah. Kategori aktif di <strong>Body Mesin</strong> berganti tiap 30 detik. Klik benda yang cocok dengan kategori aktif!
+        <strong>Tahap 2: Latih AI pada Ban Berjalan.</strong> Objek mengalir rapat dari kiri ke tengah. Kategori aktif di <strong>Body Mesin</strong> berganti tiap 30 detik. Klik benda yang cocok dengan kategori aktif!
       </div>
 
       <div class="conveyor-stage-layout" id="conveyor-area-2">
@@ -603,11 +607,11 @@
             <div class="output-basket-items" id="basket-fase2-sayur_daun"></div>
           </div>
           <div class="output-basket-box">
-            <div class="output-basket-title">🥕 Sayur Umbi</div>
+            <div class="output-basket-title">🥕 Sayur Umbi / Bumbu</div>
             <div class="output-basket-items" id="basket-fase2-sayur_umbi"></div>
           </div>
           <div class="output-basket-box">
-            <div class="output-basket-title">👟 Bukan Makanan</div>
+            <div class="output-basket-title">📦 Sampah Panen / Olahan / Lainnya</div>
             <div class="output-basket-items" id="basket-fase2-bukan_makanan"></div>
           </div>
         </div>
@@ -658,11 +662,11 @@
             <div class="output-basket-items" id="basket-fase3-sayur_daun"></div>
           </div>
           <div class="output-basket-box" id="fase3-box-sayur_umbi">
-            <div class="output-basket-title">🥕 Sayur Umbi</div>
+            <div class="output-basket-title">🥕 Sayur Umbi / Bumbu</div>
             <div class="output-basket-items" id="basket-fase3-sayur_umbi"></div>
           </div>
           <div class="output-basket-box" id="fase3-box-bukan_makanan">
-            <div class="output-basket-title">👟 Bukan Makanan</div>
+            <div class="output-basket-title">📦 Sampah Panen / Olahan / Lainnya</div>
             <div class="output-basket-items" id="basket-fase3-bukan_makanan"></div>
           </div>
         </div>
@@ -678,37 +682,72 @@
 
   <script>
     /* ==========================================================================
-       DATASET BENDA (DENGAN VARIASI VISUAL & CIRI INDERAWI/ATRIBUSI)
+       DATASET BENDA LENGKAP & SPESIFIK
        ========================================================================== */
     const dataset = [
-      { id: 1, name: "Apel Merah", icon: "🍎", defaultCategory: "buah_manis", attributes: { warna: "Merah", tekstur: "Halus/Renyah", rasa: "Manis", tumbuh: "Pohon" } },
-      { id: 2, name: "Apel Hijau", icon: "🍏", defaultCategory: "buah_asam", attributes: { warna: "Hijau", tekstur: "Renyah", rasa: "Asam Segar", tumbuh: "Pohon" } },
-      { id: 3, name: "Pisang Matang", icon: "🍌", defaultCategory: "buah_manis", attributes: { warna: "Kuning", tekstur: "Lembek", rasa: "Manis", tumbuh: "Pohon" } },
-      { id: 4, name: "Pisang Hijau", icon: "🍌", defaultCategory: "buah_asam", attributes: { warna: "Hijau", tekstur: "Keras", rasa: "Sepat/Asam", tumbuh: "Pohon" } },
-      { id: 5, name: "Lemon Utuh", icon: "🍋", defaultCategory: "buah_asam", attributes: { warna: "Kuning", tekstur: "Agak Kasar", rasa: "Sangat Asam", tumbuh: "Pohon" } },
-      { id: 6, name: "Jeruk Segar", icon: "🍊", defaultCategory: "buah_asam", attributes: { warna: "Oranye", tekstur: "Pori-pori", rasa: "Manis Asam", tumbuh: "Pohon" } },
-      { id: 7, name: "Stroberi", icon: "🍓", defaultCategory: "buah_asam", attributes: { warna: "Merah Bintik", tekstur: "Biji Luar", rasa: "Asam Manis", tumbuh: "Tanah/Semak" } },
-      { id: 8, name: "Anggur Merah", icon: "🍇", defaultCategory: "buah_manis", attributes: { warna: "Ungu/Merah", tekstur: "Licin/Kenyal", rasa: "Manis", tumbuh: "Pohon Merambat" } },
-      { id: 9, name: "Bayam", icon: "🥬", defaultCategory: "sayur_daun", attributes: { warna: "Hijau", tekstur: "Tipis/Tipis Daun", rasa: "Hambar/Tawar", tumbuh: "Batang Tanah" } },
-      { id: 10, name: "Brokoli", icon: "🥦", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Rindang", tekstur: "Bunga Daun", rasa: "Tawar", tumbuh: "Batang" } },
-      { id: 11, name: "Sawi Hijau", icon: "🥬", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Tua", tekstur: "Daun Lebar", rasa: "Agak Pahit", tumbuh: "Tanah" } },
-      { id: 12, name: "Wortel Utuh", icon: "🥕", defaultCategory: "sayur_umbi", attributes: { warna: "Oranye", tekstur: "Keras/Panjang", rasa: "Renyah Manis", tumbuh: "Dalam Tanah" } },
-      { id: 13, name: "Wortel Potong", icon: "🥕", defaultCategory: "sayur_umbi", attributes: { warna: "Oranye", tekstur: "Potongan Bulat", rasa: "Renyah", tumbuh: "Dalam Tanah" } },
-      { id: 14, name: "Kentang", icon: "🥔", defaultCategory: "sayur_umbi", attributes: { warna: "Cokelat", tekstur: "Kulit Kasar", rasa: "Pati/Hambar", tumbuh: "Dalam Tanah" } },
-      { id: 15, name: "Jagung", icon: "🌽", defaultCategory: "sayur_umbi", attributes: { warna: "Kuning Biji", tekstur: "Biji Berbaris", rasa: "Manis Gurih", tumbuh: "Pohon Jagung" } },
-      { id: 16, name: "Sepatu Olahraga", icon: "👟", defaultCategory: "bukan_makanan", attributes: { warna: "Variasi", tekstur: "Kain/Karet", rasa: "Bukan Makanan", tumbuh: "Pabrik" } },
-      { id: 17, name: "Botol Plastik", icon: "🍾", defaultCategory: "bukan_makanan", attributes: { warna: "Bening", tekstur: "Keras Licin", rasa: "Bukan Makanan", tumbuh: "Pabrik" } },
-      { id: 18, name: "Mobil Mainan", icon: "🚗", defaultCategory: "bukan_makanan", attributes: { warna: "Merah", tekstur: "Besi/Plastik", rasa: "Bukan Makanan", tumbuh: "Pabrik" } },
-      { id: 19, name: "Batu Kali", icon: "🪨", defaultCategory: "bukan_makanan", attributes: { warna: "Abu-abu", tekstur: "Sangat Keras", rasa: "Bukan Makanan", tumbuh: "Alam/Sungai" } },
-      { id: 20, name: "Kaleng Bekas", icon: "🥫", defaultCategory: "bukan_makanan", attributes: { warna: "Seng/Mengkilap", tekstur: "Logam", rasa: "Bukan Makanan", tumbuh: "Pabrik" } }
+      // BUAH-BUAHAN
+      { id: 1, name: "Apel Merah", icon: "🍎", defaultCategory: "buah_manis", attributes: { warna: "Merah", tekstur: "Halus/Renyah", rasa: "Manis", jenis: "Buah Segar" } },
+      { id: 2, name: "Apel Hijau", icon: "🍏", defaultCategory: "buah_asam", attributes: { warna: "Hijau", tekstur: "Renyah", rasa: "Asam Segar", jenis: "Buah Segar" } },
+      { id: 3, name: "Pisang Tua (Matang)", icon: "🍌", defaultCategory: "buah_manis", attributes: { warna: "Kuning Sisir", tekstur: "Empuk Manis", rasa: "Manis", jenis: "Buah Matang" } },
+      { id: 4, name: "Pisang Muda (Kuncup)", icon: "🍌🟢", defaultCategory: "buah_asam", attributes: { warna: "Hijau Utuh Kulit Rapat", tekstur: "Keras/Sepat", rasa: "Sepat/Asam", jenis: "Buah Mentah" } },
+      { id: 5, name: "Lemon Utuh", icon: "🍋", defaultCategory: "buah_asam", attributes: { warna: "Kuning", tekstur: "Pori Halus", rasa: "Sangat Asam", jenis: "Buah Segar" } },
+      { id: 6, name: "Jeruk Segar", icon: "🍊", defaultCategory: "buah_asam", attributes: { warna: "Oranye", tekstur: "Kulit Berpori", rasa: "Manis Asam", jenis: "Buah Segar" } },
+      { id: 7, name: "Rambutan", icon: "🔴", defaultCategory: "buah_manis", attributes: { warna: "Merah Berrambut", tekstur: "Berbulu", rasa: "Manis Segar", jenis: "Buah Lokal" } },
+      { id: 8, name: "Duku", icon: "🟡", defaultCategory: "buah_manis", attributes: { warna: "Kecokelatan", tekstur: "Kulit Tipis", rasa: "Manis", jenis: "Buah Lokal" } },
+      { id: 9, name: "Kelengkeng", icon: "🟤", defaultCategory: "buah_manis", attributes: { warna: "Cokelat Bening", tekstur: "Bulat Licin", rasa: "Sangat Manis", jenis: "Buah Lokal" } },
+      { id: 10, name: "Durian", icon: "🥠", defaultCategory: "buah_manis", attributes: { warna: "Hijau Duri", tekstur: "Berduri Tajam", rasa: "Manis Legit", jenis: "Buah Tropis" } },
+      { id: 11, name: "Mangga Matang", icon: "🥭", defaultCategory: "buah_manis", attributes: { warna: "Kuning Oranye", tekstur: "Halus Daging", rasa: "Manis", jenis: "Buah Tropis" } },
+      { id: 12, name: "Salak", icon: "🤎", defaultCategory: "buah_manis", attributes: { warna: "Cokelat Sisik", tekstur: "Kasar Bersisik", rasa: "Manis Sepat", jenis: "Buah Lokal" } },
+      { id: 13, name: "Manggis", icon: "🟣", defaultCategory: "buah_manis", attributes: { warna: "Ungu Tua", tekstur: "Tebal Keras", rasa: "Manis Asam", jenis: "Buah Lokal" } },
+      { id: 14, name: "Nanas", icon: "🍍", defaultCategory: "buah_asam", attributes: { warna: "Kuning Bersisik", tekstur: "Mata Sisik", rasa: "Asam Manis", jenis: "Buah Tropis" } },
+      { id: 15, name: "Buah Naga", icon: "🌺", defaultCategory: "buah_manis", attributes: { warna: "Merah Sisik Naga", tekstur: "Biji Kecil Hitam", rasa: "Manis Segar", jenis: "Buah Tropis" } },
+      { id: 16, name: "Markisa", icon: "🟣", defaultCategory: "buah_asam", attributes: { warna: "Ungu/Kuning", tekstur: "Biji Bulir", rasa: "Asam Segar", jenis: "Buah Segar" } },
+      { id: 17, name: "Delima", icon: "🍎🔴", defaultCategory: "buah_manis", attributes: { warna: "Merah Biji", tekstur: "Biji Berkilau", rasa: "Manis Asam", jenis: "Buah Segar" } },
+      { id: 18, name: "Nangka Matang", icon: "🟡", defaultCategory: "buah_manis", attributes: { warna: "Kuning Duri Halus", tekstur: "Berserat Nangka", rasa: "Manis Harum", jenis: "Buah Tropis" } },
+      { id: 19, name: "Buah Matoa", icon: "🟢🟤", defaultCategory: "buah_manis", attributes: { warna: "Hijau Cokelat", tekstur: "Cangkang Tipis", rasa: "Manis Rambutan Durian", jenis: "Buah Khas Papua" } },
+      { id: 20, name: "Leci", icon: "🔴", defaultCategory: "buah_manis", attributes: { warna: "Merah Bintik", tekstur: "Kulit Tipis Kasar", rasa: "Manis Harum", jenis: "Buah Segar" } },
+
+      // SAYUR-SAYURAN & BUMBU PANEN
+      { id: 21, name: "Bayam", icon: "🥬", defaultCategory: "sayur_daun", attributes: { warna: "Hijau", tekstur: "Daun Tipis", rasa: "Hambar", jenis: "Sayur Daun" } },
+      { id: 22, name: "Selada Segar", icon: "🥗", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Muda", tekstur: "Keriting Crisp", rasa: "Segar", jenis: "Sayur Daun" } },
+      { id: 23, name: "Kacang Panjang", icon: "🫛", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Panjang", tekstur: "Polong", rasa: "Gurih", jenis: "Sayur Polong" } },
+      { id: 24, name: "Daun Bawang", icon: "🌱", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Putih", tekstur: "Rongga Batang", rasa: "Aroma Bumbu", jenis: "Sayur Daun" } },
+      { id: 25, name: "Kobis / Kubis", icon: "🥬⚪", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Putih Bulat", tekstur: "Daun Berlapis", rasa: "Renyah Segar", jenis: "Sayur Daun" } },
+      { id: 26, name: "Lobak Putih", icon: "🤍", defaultCategory: "sayur_umbi", attributes: { warna: "Putih Panjang", tekstur: "Padat Renyah", rasa: "Sedikit Pedas Segar", jenis: "Sayur Umbi" } },
+      { id: 27, name: "Wortel Utuh", icon: "🥕", defaultCategory: "sayur_umbi", attributes: { warna: "Oranye", tekstur: "Keras Panjang", rasa: "Renyah", jenis: "Sayur Umbi" } },
+      { id: 28, name: "Ketela Rambat", icon: "🍠", defaultCategory: "sayur_umbi", attributes: { warna: "Ungu/Cokelat", tekstur: "Kulit Tanah", rasa: "Manis Pati", jenis: "Umbi Tanah" } },
+      { id: 29, name: "Bawang Putih", icon: "🧄", defaultCategory: "sayur_umbi", attributes: { warna: "Putih Siung", tekstur: "Berlapis", rasa: "Pedas Bumbu", jenis: "Bumbu Dapur" } },
+      { id: 30, name: "Bawang Merah", icon: "🧅", defaultCategory: "sayur_umbi", attributes: { warna: "Merah Keunguan", tekstur: "Berlapis", rasa: "Aroma Bumbu", jenis: "Bumbu Dapur" } },
+      { id: 31, name: "Pala Utuh", icon: "🪵", defaultCategory: "sayur_umbi", attributes: { warna: "Cokelat Tempurung", tekstur: "Biji Keras", rasa: "Aroma Harum Bumbu", jenis: "Rempah Bumbu" } },
+      { id: 32, name: "Merica / Lada", icon: "🫘", defaultCategory: "sayur_umbi", attributes: { warna: "Hitam/Putih Butir", tekstur: "Butiran Bulat", rasa: "Pedas Bumbu", jenis: "Rempah Bumbu" } },
+      { id: 33, name: "Lengkuas", icon: "🫚", defaultCategory: "sayur_umbi", attributes: { warna: "Cokelat Berserat", tekstur: "Keras Berserat", rasa: "Aroma Tajam Bumbu", jenis: "Rimpang Bumbu" } },
+      { id: 34, name: "Jahe", icon: "🫚🟤", defaultCategory: "sayur_umbi", attributes: { warna: "Kuning Cokelat", tekstur: "Rimpang Berbuku", rasa: "Pedas Hangat", jenis: "Rimpang Bumbu" } },
+      { id: 35, name: "Kunyit", icon: "🫚🟡", defaultCategory: "sayur_umbi", attributes: { warna: "Kuning Oranye", tekstur: "Rimpang Kuning", rasa: "Aroma Khas Bumbu", jenis: "Rimpang Bumbu" } },
+
+      // BIJI-BIJIAN & SEREAL
+      { id: 36, name: "Jagung Biji", icon: "🌽", defaultCategory: "sayur_umbi", attributes: { warna: "Kuning Biji", tekstur: "Biji Berbaris", rasa: "Manis Gurih", jenis: "Sereal / Biji" } },
+      { id: 37, name: "Sorgum", icon: "🌾", defaultCategory: "sayur_umbi", attributes: { warna: "Cokelat Biji", tekstur: "Butiran Kecil", rasa: "Pati/Gurih", jenis: "Biji Sereal" } },
+      { id: 38, name: "Gandum", icon: "🌾🟡", defaultCategory: "sayur_umbi", attributes: { warna: "Kuning Emas", tekstur: "Bulir Bersekat", rasa: "Pati", jenis: "Biji Sereal" } },
+
+      // BAHAN MAKANAN LAIN (NON BUAH/SAYUR SEGAR)
+      { id: 39, name: "Telur Ayam", icon: "🥚", defaultCategory: "bukan_makanan", attributes: { warna: "Cokelat Oval", tekstur: "Cangkang Keras", rasa: "Gurih Olahan", jenis: "Bahan Protein" } },
+      { id: 40, name: "Roti Tawar", icon: "🍞", defaultCategory: "bukan_makanan", attributes: { warna: "Putih Cokelat", tekstur: "Empuk", rasa: "Manis Gurih", jenis: "Olahan Makanan" } },
+      { id: 41, name: "Beras (Kantong)", icon: "🌾", defaultCategory: "bukan_makanan", attributes: { warna: "Putih Karung", tekstur: "Biji Biji", rasa: "Pati", jenis: "Bahan Pokok" } },
+      { id: 42, name: "Gula Kemasan", icon: "🍬", defaultCategory: "bukan_makanan", attributes: { warna: "Bening/Kristal", tekstur: "Butiran", rasa: "Manis", jenis: "Bumbu Makanan" } },
+
+      // BENDA NON-MAKANAN / SAMPAH PANEN TERCAMPUR
+      { id: 43, name: "Ranting Pohon", icon: "🪵", defaultCategory: "bukan_makanan", attributes: { warna: "Cokelat Kayu", tekstur: "Keras Berserat", rasa: "Bukan Makanan", jenis: "Sampah Kebun" } },
+      { id: 44, name: "Daun Kering", icon: "🍂", defaultCategory: "bukan_makanan", attributes: { warna: "Cokelat Gugur", tekstur: "Renyah Rapuh", rasa: "Bukan Makanan", jenis: "Sampah Kebun" } },
+      { id: 45, name: "Kaleng Bekas", icon: "🥫", defaultCategory: "bukan_makanan", attributes: { warna: "Seng Mengkilap", tekstur: "Logam Keras", rasa: "Bukan Makanan", jenis: "Sampah Kebun" } },
+      { id: 46, name: "Batu Lahan Kebun", icon: "🪨", defaultCategory: "bukan_makanan", attributes: { warna: "Abu-abu Alam", tekstur: "Batu Padat Keras", rasa: "Bukan Makanan", jenis: "Benda Kebun" } }
     ];
 
     const categoryNames = {
       'buah_manis': '🍎 BUAH MANIS',
       'buah_asam': '🍋 BUAH ASAM / SEGAR',
       'sayur_daun': '🥬 SAYUR DAUN',
-      'sayur_umbi': '🥕 SAYUR UMBI',
-      'bukan_makanan': '👟 BUKAN MAKANAN'
+      'sayur_umbi': '🥕 SAYUR UMBI / BUMBU',
+      'bukan_makanan': '📦 SAMPAH / OLAHAN / LAINNYA'
     };
 
     const categoriesList = ['buah_manis', 'buah_asam', 'sayur_daun', 'sayur_umbi', 'bukan_makanan'];
@@ -718,9 +757,10 @@
     let currentCategoryIndex = 0;
     let timerValue = 30;
     let timerInterval = null;
-    let userTrainedData = []; // Menyimpan masukan data latih dari siswa
+    let userTrainedData = [];
     let isAutoRunning = false;
     let autoInterval = null;
+    let spawnFase2Interval = null;
 
     /* WEB AUDIO API SYNTHESIZER */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -758,6 +798,7 @@
       document.getElementById(`btn-phase${phaseNum}`).classList.add('active');
 
       stopAutoConveyor();
+      if (spawnFase2Interval) clearInterval(spawnFase2Interval);
 
       if (phaseNum === 1) renderSampleFase1();
       if (phaseNum === 2) startFase2Conveyor();
@@ -778,10 +819,10 @@
 
       const attrBox = document.getElementById('sample-attributes');
       attrBox.innerHTML = `
-        <div>• <strong>Warna:</strong> ${item.attributes.warna}</div>
+        <div>• <strong>Warna & Visual:</strong> ${item.attributes.warna}</div>
         <div>• <strong>Tekstur/Kulit:</strong> ${item.attributes.tekstur}</div>
-        <div>• <strong>Ciri Rasa:</strong> ${item.attributes.rasa}</div>
-        <div>• <strong>Tempat Tumbuh:</strong> ${item.attributes.tumbuh}</div>
+        <div>• <strong>Ciri Rasa/Fungsi:</strong> ${item.attributes.rasa}</div>
+        <div>• <strong>Jenis/Asal:</strong> ${item.attributes.jenis}</div>
       `;
     }
 
@@ -804,10 +845,8 @@
       playSound('success');
       const item = dataset[currentIndex];
 
-      // Catat data latih berdasarkan masukan anak (walaupun anak salah mengelompokkan!)
       userTrainedData.push({ ...item, userAssignedCategory: chosenCategory });
 
-      // Visualisasi badge di keranjang
       const basket = document.getElementById(`basket-fase1-${chosenCategory}`);
       if (basket) {
         const badge = document.createElement('div');
@@ -829,7 +868,7 @@
       switchPhase(2);
     }
 
-    /* FASE 2: BAN BERJALAN & TIMER 30 DETIK */
+    /* FASE 2: BAN BERJALAN & TIMER 30 DETIK (LEBIH RAPAT) */
     function startFase2Conveyor() {
       currentCategoryIndex = 0;
       updateTargetCategoryDisplay();
@@ -863,21 +902,23 @@
 
     function spawnMovingItemsFase2() {
       const zone = document.getElementById('conveyor-left-zone');
+      if (spawnFase2Interval) clearInterval(spawnFase2Interval);
       
-      setInterval(() => {
+      // Spawn item rapat (tiap 1.5 detik)
+      spawnFase2Interval = setInterval(() => {
         if (!document.getElementById('phase2').classList.contains('active')) return;
 
         const randomItem = dataset[Math.floor(Math.random() * dataset.length)];
         const el = document.createElement('div');
         el.className = 'moving-item';
-        el.innerHTML = `<div style="font-size:2.2rem">${randomItem.icon}</div><div style="font-size:0.65rem; font-weight:bold; text-align:center;">${randomItem.name}</div>`;
+        el.innerHTML = `<div style="font-size:2rem">${randomItem.icon}</div><div style="font-size:0.6rem; font-weight:bold; text-align:center;">${randomItem.name}</div>`;
         
         let pos = -80;
         el.style.left = pos + 'px';
         zone.appendChild(el);
 
         const moveAnim = setInterval(() => {
-          pos += 2;
+          pos += 2.5;
           el.style.left = pos + 'px';
 
           if (pos > zone.clientWidth - 40) {
@@ -904,10 +945,10 @@
           clearInterval(moveAnim);
           el.remove();
         };
-      }, 3000);
+      }, 1500);
     }
 
-    /* FASE 3: UJI HASIL MESIN (ANIMASI MENGALIR KE MESIN & MASUK KERANJANG) */
+    /* FASE 3: UJI HASIL MESIN (PEMBAHARUAN TOMBOL KONTROL & INTERVAL) */
     function initTestingStage() {
       const screen = document.getElementById('machine-screen-test');
       screen.classList.remove('error-mode');
@@ -915,6 +956,7 @@
     }
 
     function toggleAutoConveyor() {
+      playSound('click');
       if (isAutoRunning) {
         stopAutoConveyor();
       } else {
@@ -924,30 +966,47 @@
 
     function startAutoConveyor() {
       isAutoRunning = true;
-      document.getElementById('btn-toggle-auto').innerText = "⏸️ Hentikan Ban Berjalan";
+      const btn = document.getElementById('btn-toggle-auto');
+      if (btn) {
+        btn.innerText = "⏸️ Hentikan Ban Berjalan";
+        btn.style.backgroundColor = "#d32f2f";
+      }
+
       document.getElementById('machine-screen-test').innerText = "BAN BERJALAN AKTIF...\nMENGANALISIS ITEM";
 
-      // Spawn item setiap 4.5 detik
+      // Spawn item rapat tiap 1.8 detik
       spawnTestItemAnim();
-      autoInterval = setInterval(spawnTestItemAnim, 4500);
+      clearInterval(autoInterval);
+      autoInterval = setInterval(spawnTestItemAnim, 1800);
     }
 
     function stopAutoConveyor() {
       isAutoRunning = false;
       clearInterval(autoInterval);
+      autoInterval = null;
+
       const btn = document.getElementById('btn-toggle-auto');
-      if (btn) btn.innerText = "▶️ Jalankan Ban Berjalan";
+      if (btn) {
+        btn.innerText = "▶️ Jalankan Ban Berjalan";
+        btn.style.backgroundColor = "var(--secondary-color)";
+      }
+
+      const screen = document.getElementById('machine-screen-test');
+      if (screen) {
+        screen.classList.remove('error-mode');
+        screen.innerText = "BAN BERJALAN DIHENTIKAN";
+      }
     }
 
     function spawnTestItemAnim() {
-      if (!document.getElementById('phase3').classList.contains('active')) return;
+      if (!isAutoRunning || !document.getElementById('phase3').classList.contains('active')) return;
 
       const container = document.getElementById('phase3-moving-container');
       const testItem = dataset[Math.floor(Math.random() * dataset.length)];
 
       const el = document.createElement('div');
       el.className = 'moving-item';
-      el.innerHTML = `<div style="font-size:2.2rem">${testItem.icon}</div><div style="font-size:0.65rem; font-weight:bold; text-align:center;">${testItem.name}</div>`;
+      el.innerHTML = `<div style="font-size:2rem">${testItem.icon}</div><div style="font-size:0.6rem; font-weight:bold; text-align:center;">${testItem.name}</div>`;
       
       let posX = -80;
       el.style.left = posX + 'px';
@@ -966,6 +1025,12 @@
 
       // Animation loop
       const moveInterval = setInterval(() => {
+        if (!isAutoRunning) {
+          clearInterval(moveInterval);
+          el.remove();
+          return;
+        }
+
         posX += 3;
         el.style.left = posX + 'px';
 
@@ -975,7 +1040,7 @@
 
         // Saat objek masuk ke dalam mesin
         if (posX > machineLeft && posX < machineRight) {
-          el.style.opacity = '0.3'; // Efek samar saat di dalam mesin
+          el.style.opacity = '0.3';
           
           if (isFactualError) {
             screen.classList.add('error-mode');
@@ -988,12 +1053,11 @@
           el.style.opacity = '1';
         }
 
-        // Saat objek sampai di ujung kanan (Keranjang)
+        // Saat objek sampai di keranjang kanan
         if (posX > stageWidth - 260) {
           clearInterval(moveInterval);
           el.remove();
 
-          // Masukkan item ke keranjang hasil
           const targetBox = document.getElementById(`basket-fase3-${predictedCategory}`);
           const boxWrapper = document.getElementById(`fase3-box-${predictedCategory}`);
 
@@ -1011,7 +1075,6 @@
               playSound('success');
             }
 
-            // Efek highlight keranjang
             if (boxWrapper) {
               boxWrapper.classList.add('highlight');
               setTimeout(() => boxWrapper.classList.remove('highlight'), 800);
