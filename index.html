@@ -30,7 +30,7 @@
       min-height: 100vh;
     }
 
-    /* Header & Branding (Revisi: Logo Kiri, Maskot Kanan) */
+    /* Header & Branding */
     header {
       background: linear-gradient(135deg, #1b5e20, #388e3c);
       color: white;
@@ -50,11 +50,7 @@
     .brand-right {
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 6px 12px;
-      border-radius: 12px;
-      backdrop-filter: blur(4px);
+      gap: 16px;
     }
 
     .logo-img {
@@ -64,19 +60,39 @@
     }
 
     .maskot-img {
-      height: 56px;
+      height: 52px;
       width: auto;
       object-fit: contain;
     }
 
     .brand-title h1 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
     }
 
     .brand-title p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       opacity: 0.9;
+    }
+
+    .reset-app-btn {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: background 0.2s;
+    }
+
+    .reset-app-btn:hover {
+      background-color: #b71c1c;
     }
 
     /* Navigation / Phase Tabs */
@@ -84,7 +100,7 @@
       display: flex;
       justify-content: center;
       background-color: #ffffff;
-      padding: 8px;
+      padding: 10px;
       gap: 12px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
@@ -110,7 +126,7 @@
     main {
       flex: 1;
       padding: 20px;
-      max-width: 1280px;
+      max-width: 1380px;
       margin: 0 auto;
       width: 100%;
       display: flex;
@@ -139,18 +155,27 @@
       border-radius: 0 8px 8px 0;
       font-size: 0.95rem;
       color: #0d47a1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    /* FASE 1: Pendataan dengan Drag & Drop + Atribut */
+    /* FASE 1: Pendataan Sample & Drag-Drop */
     .fase1-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
+    }
+
+    .sample-deck {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
 
     .card-drag-sample {
-      width: 240px;
+      width: 260px;
       background: #ffffff;
       border: 3px solid #81c784;
       border-radius: 16px;
@@ -174,7 +199,7 @@
     .item-title {
       font-weight: bold;
       font-size: 1.2rem;
-      margin: 8px 0 4px 0;
+      margin: 6px 0;
     }
 
     .attributes-list {
@@ -190,7 +215,7 @@
 
     .category-baskets-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 16px;
       width: 100%;
       margin-top: 10px;
@@ -201,13 +226,14 @@
       border: 2px dashed #ffa000;
       border-radius: 12px;
       padding: 12px;
-      min-height: 120px;
+      min-height: 130px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       gap: 8px;
       transition: background 0.2s;
+      cursor: pointer;
     }
 
     .drop-basket.drag-over {
@@ -217,7 +243,7 @@
 
     .basket-header {
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #e65100;
       text-align: center;
     }
@@ -226,6 +252,8 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      width: 100%;
+      justify-content: center;
     }
 
     .item-badge {
@@ -236,18 +264,26 @@
       font-size: 1.2rem;
     }
 
-    /* FASE 2: Ban Berjalan & Timer 30 Detik di Body Mesin */
-    .conveyor-stage {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Layout Ban Berjalan & Mesin di Tengah */
+    .conveyor-stage-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px 1fr;
       background: #eceff1;
       border-radius: 16px;
       padding: 20px;
       position: relative;
       overflow: hidden;
-      min-height: 380px;
-      gap: 16px;
+      min-height: 420px;
+      gap: 20px;
+      align-items: center;
+    }
+
+    /* Track Ban Berjalan dari Kiri ke Mesin */
+    .conveyor-left-zone {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
     }
 
     .conveyor-belt-track {
@@ -271,6 +307,7 @@
       to { background-position: 40px 0; }
     }
 
+    /* Objek Berjalan */
     .moving-item {
       position: absolute;
       bottom: 70px;
@@ -286,12 +323,14 @@
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,0,0,0.15);
       transition: transform 0.1s;
+      z-index: 5;
     }
 
     .moving-item:hover {
       transform: scale(1.1);
     }
 
+    /* Body Mesin AI di Tengah Layar */
     .machine-center-body {
       background: linear-gradient(145deg, #37474f, #263238);
       border-radius: 20px;
@@ -301,10 +340,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      z-index: 2;
+      z-index: 10;
       border: 4px solid #546e7a;
+      justify-self: center;
     }
 
     .machine-screen-display {
@@ -315,22 +355,23 @@
       padding: 12px;
       color: #00e676;
       text-align: center;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     .category-target-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: bold;
       color: #ffeb3b;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .timer-bar-container {
       width: 100%;
-      height: 10px;
+      height: 8px;
       background: #333;
-      border-radius: 5px;
+      border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .timer-bar-fill {
@@ -340,7 +381,38 @@
       transition: width 1s linear;
     }
 
-    /* Action Buttons */
+    /* Area Keranjang Output di Sebelah Kanan Mesin */
+    .output-baskets-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .output-basket-box {
+      background: #ffffff;
+      border: 2px solid #ffb74d;
+      border-radius: 10px;
+      padding: 8px 12px;
+      min-height: 60px;
+    }
+
+    .output-basket-title {
+      font-weight: bold;
+      font-size: 0.75rem;
+      color: #e65100;
+      margin-bottom: 4px;
+    }
+
+    .output-basket-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    /* Buttons */
     .action-btn {
       background-color: var(--secondary-color);
       color: white;
@@ -350,6 +422,10 @@
       font-weight: bold;
       border-radius: 20px;
       cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background-color: #e65100;
     }
 
     footer {
@@ -371,84 +447,105 @@
       <img src="bbgtk diy logo.png" alt="Logo BBGTK DIY" class="logo-img" onerror="this.src='https://via.placeholder.com/120x48?text=BBGTK+DIY'">
       <div class="brand-title">
         <h1>Mesin Penyortir AI</h1>
-        <p>Edukasi AI Anak-Anak</p>
+        <p>Edukasi AI Anak - Klasifikasi & Data Latih</p>
       </div>
     </div>
 
-    <!-- Kanan Atas: Maskot Si Yo -->
+    <!-- Kanan Atas: Maskot Si Yo & Tombol Reset -->
     <div class="brand-right">
-      <img src="maskot-siyo.png" alt="Maskot Si Yo" class="maskot-img" onerror="this.src='https://via.placeholder.com/56x56?text=Si+Yo'">
+      <button class="reset-app-btn" onclick="resetAllData()">
+        <span>🔄 Reset AI</span>
+      </button>
+      <img src="maskot-siyo.png" alt="Maskot Si Yo" class="maskot-img" onerror="this.src='https://via.placeholder.com/52x52?text=Si+Yo'">
       <span style="font-weight:bold; font-size:0.9rem;">Si Yo</span>
     </div>
   </header>
 
-  <!-- Navigation -->
+  <!-- Navigation / Phases -->
   <nav class="phase-nav">
-    <button class="nav-btn active" id="btn-phase1" onclick="switchPhase(1)">1. Pendataan (Drag & Drop)</button>
-    <button class="nav-btn" id="btn-phase2" onclick="switchPhase(2)">2. Latih AI (Ban Berjalan & Timer)</button>
-    <button class="nav-btn" id="btn-phase3" onclick="switchPhase(3)">3. Uji Mesin</button>
+    <button class="nav-btn active" id="btn-phase1" onclick="switchPhase(1)">1. Input Data Latih</button>
+    <button class="nav-btn" id="btn-phase2" onclick="switchPhase(2)">2. Latih AI (Ban Berjalan)</button>
+    <button class="nav-btn" id="btn-phase3" onclick="switchPhase(3)">3. Uji Hasil Mesin</button>
   </nav>
 
   <!-- Main Content -->
   <main>
 
-    <!-- FASE 1: Pendataan dengan Atribut & Drag and Drop -->
+    <!-- FASE 1: PENDATAAN AWAL (INPUT DATA LATIH) -->
     <section id="phase1" class="phase-panel active">
       <div class="instruction-box">
-        <strong>Tahap 1: Pendataan Ciri-Ciri.</strong> Amati benda berikut beserta atributnya. Tarik (drag) atau klik benda menuju keranjang kategori yang sesuai.
+        <div>
+          <strong>Tahap 1: Pengumpulan Data Latih.</strong> Amati ciri inderawi/visual benda berikut. Tarik (drag) atau klik benda untuk memasukkannya ke keranjang yang menurutmu sesuai. <em>(Catatan: Kamu tidak perlu memasukkan semua sampel!)</em>
+        </div>
+        <button class="action-btn" style="padding:6px 14px; font-size:0.8rem;" onclick="skipToPhase2()">Selesai Latih →</button>
       </div>
 
       <div class="fase1-container">
-        <!-- Sampel Benda Utama -->
-        <div class="card-drag-sample" id="drag-sample-card" draggable="true" ondragstart="handleDragStart(event)">
-          <div class="item-icon" id="sample-icon">🍎</div>
-          <div class="item-title" id="sample-name">Apel Merah</div>
-          <div class="attributes-list" id="sample-attributes">
-            <!-- Atribut diinjeksi via JS -->
+        <!-- Deck Card Sample -->
+        <div class="sample-deck">
+          <button class="action-btn" style="background:#78909c;" onclick="prevSample()">←</button>
+          
+          <div class="card-drag-sample" id="drag-sample-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="item-icon" id="sample-icon">🍎</div>
+            <div class="item-title" id="sample-name">Apel Merah</div>
+            <div class="attributes-list" id="sample-attributes">
+              <!-- Atribut diinjeksi via JS -->
+            </div>
           </div>
+
+          <button class="action-btn" style="background:#78909c;" onclick="nextSample()">→</button>
+        </div>
+
+        <div style="font-size:0.85rem; color:#666;">
+          Sampel Ke- <span id="sample-count-text">1</span> dari <span id="sample-total-text">20</span> | Data Latih Terkumpul: <span id="trained-count-text" style="font-weight:bold; color:#2e7d32;">0</span>
         </div>
 
         <!-- Keranjang Kategori Drop Zone -->
         <div class="category-baskets-grid">
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'buah_manis')" onclick="clickAssign('buah_manis')">
             <div class="basket-header">🍎 Buah Manis</div>
-            <div class="basket-items-flex" id="basket-buah_manis"></div>
+            <div class="basket-items-flex" id="basket-fase1-buah_manis"></div>
           </div>
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'buah_asam')" onclick="clickAssign('buah_asam')">
-            <div class="basket-header">🍋 Buah Asam</div>
-            <div class="basket-items-flex" id="basket-buah_asam"></div>
+            <div class="basket-header">🍋 Buah Asam / Segar</div>
+            <div class="basket-items-flex" id="basket-fase1-buah_asam"></div>
           </div>
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'sayur_daun')" onclick="clickAssign('sayur_daun')">
-            <div class="basket-header">🥬 Sayur Daun</div>
-            <div class="basket-items-flex" id="basket-sayur_daun"></div>
+            <div class="basket-header">🥬 Sayur Daun / Hijau</div>
+            <div class="basket-items-flex" id="basket-fase1-sayur_daun"></div>
           </div>
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'sayur_umbi')" onclick="clickAssign('sayur_umbi')">
-            <div class="basket-header">🥕 Sayur Umbi</div>
-            <div class="basket-items-flex" id="basket-sayur_umbi"></div>
+            <div class="basket-header">🥕 Sayur Umbi / Biji</div>
+            <div class="basket-items-flex" id="basket-fase1-sayur_umbi"></div>
           </div>
           <div class="drop-basket" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'bukan_makanan')" onclick="clickAssign('bukan_makanan')">
-            <div class="basket-header">👟 Bukan Buah/Sayur</div>
-            <div class="basket-items-flex" id="basket-bukan_makanan"></div>
+            <div class="basket-header">👟 Bukan Buah / Sayur</div>
+            <div class="basket-items-flex" id="basket-fase1-bukan_makanan"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FASE 2: Ban Berjalan & Timer Kategori 30 Detik di Body Mesin -->
+    <!-- FASE 2: BAN BERJALAN & MESIN DI TENGAH -->
     <section id="phase2" class="phase-panel">
       <div class="instruction-box">
-        <strong>Tahap 2: Pelatihan Cepat!</strong> Benda-benda bergerak di ban berjalan. Kategori di body mesin berganti setiap <strong>30 detik</strong>. Klik benda yang sesuai dengan kategori aktif!
+        <strong>Tahap 2: Latih AI pada Ban Berjalan.</strong> Objek mengalir dari kiri ke tengah. Kategori aktif di <strong>Body Mesin</strong> berganti tiap 30 detik. Klik benda yang cocok dengan kategori aktif!
       </div>
 
-      <div class="conveyor-stage" id="conveyor-area-2">
-        <div class="conveyor-belt-track"></div>
+      <div class="conveyor-stage-layout" id="conveyor-area-2">
+        <!-- Area Kiri: Ban Berjalan Input -->
+        <div class="conveyor-left-zone" id="conveyor-left-zone">
+          <div class="conveyor-belt-track"></div>
+          <!-- Moving items injected via JS -->
+        </div>
 
-        <!-- Body Mesin AI di Tengah -->
+        <!-- Body Mesin AI di Tengah Layar -->
         <div class="machine-center-body">
-          <div style="font-size:0.85rem; font-weight:bold; color:#b0bec5;">TARGET KATEGORI AI</div>
+          <div style="font-size:0.85rem; font-weight:bold; color:#b0bec5;">MESIN PENYORTIR AI</div>
           <div class="machine-screen-display">
+            <div style="font-size:0.7rem; color:#aaa;">TARGET KATEGORI:</div>
             <div class="category-target-title" id="target-category-name">BUAH MANIS</div>
-            <div style="font-size:0.8rem;">Sisa Waktu: <span id="timer-text">30</span>s</div>
+            <div style="font-size:0.8rem; margin-top:4px;">Sisa Waktu: <span id="timer-text">30</span>s</div>
             <div class="timer-bar-container">
               <div class="timer-bar-fill" id="timer-bar"></div>
             </div>
@@ -457,56 +554,118 @@
             Klik benda di ban berjalan yang tergolong dalam kategori di atas!
           </div>
         </div>
+
+        <!-- Area Kanan: Kotak Hasil Sortiran Mesin -->
+        <div class="output-baskets-right">
+          <div class="output-basket-box">
+            <div class="output-basket-title">🍎 Buah Manis</div>
+            <div class="output-basket-items" id="basket-fase2-buah_manis"></div>
+          </div>
+          <div class="output-basket-box">
+            <div class="output-basket-title">🍋 Buah Asam / Segar</div>
+            <div class="output-basket-items" id="basket-fase2-buah_asam"></div>
+          </div>
+          <div class="output-basket-box">
+            <div class="output-basket-title">🥬 Sayur Daun</div>
+            <div class="output-basket-items" id="basket-fase2-sayur_daun"></div>
+          </div>
+          <div class="output-basket-box">
+            <div class="output-basket-title">🥕 Sayur Umbi</div>
+            <div class="output-basket-items" id="basket-fase2-sayur_umbi"></div>
+          </div>
+          <div class="output-basket-box">
+            <div class="output-basket-title">👟 Bukan Makanan</div>
+            <div class="output-basket-items" id="basket-fase2-bukan_makanan"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- FASE 3: Uji Mesin AI -->
+    <!-- FASE 3: UJI HASIL PREDIKSI MESIN -->
     <section id="phase3" class="phase-panel">
       <div class="instruction-box">
-        <strong>Tahap 3: Uji Hasil Belajar AI.</strong> Mesin AI akan mencoba memprediksi item otomatis berdasarkan data latih yang sudah kamu berikan.
+        <strong>Tahap 3: Pengujian Otomatis Mesin AI.</strong> Lihat bagaimana Mesin AI memprediksi objek baru berdasarkan data latih yang kamu berikan sebelumnya!
       </div>
-      <div style="text-align:center; padding: 40px 0;">
-        <h3>Mesin AI Siap Menguji Prediksi!</h3>
-        <p style="margin-top:10px; color:#555;">Tekan tombol di bawah untuk melihat hasil sortir otomatis.</p>
-        <button class="action-btn" style="margin-top:20px;" onclick="alert('Fitur Uji Prediksi Siap Dijalankan!')">Mulai Pengujian</button>
+
+      <div class="conveyor-stage-layout" id="conveyor-area-3">
+        <!-- Area Kiri: Test Item -->
+        <div class="conveyor-left-zone" id="test-left-zone">
+          <div class="conveyor-belt-track"></div>
+          <!-- Single test item -->
+        </div>
+
+        <!-- Body Mesin AI di Tengah -->
+        <div class="machine-center-body">
+          <div style="font-size:0.85rem; font-weight:bold; color:#b0bec5;">UJI OTOMATIS AI</div>
+          <div class="machine-screen-display" id="machine-screen-test">
+            MENUNGGU ITEM...
+          </div>
+          <button class="action-btn" onclick="runAutoTest()" id="btn-run-test">Jalankan Sortir AI</button>
+        </div>
+
+        <!-- Area Kanan: Output Sortir AI -->
+        <div class="output-baskets-right">
+          <div class="output-basket-box" style="min-height:150px;">
+            <div class="output-basket-title">📦 Hasil Penyortiran AI</div>
+            <div class="output-basket-items" id="test-output-basket"></div>
+          </div>
+        </div>
       </div>
     </section>
 
   </main>
 
+  <!-- Footer -->
   <footer>
     &copy; 2026 BBGTK DIY - Balai Besar Guru Penggerak / Balai Guru Penggerak. Dibuat untuk Edukasi AI Anak.
   </footer>
 
   <script>
-    /* DATASET BENDA DAN ATRIBUTNYA */
+    /* ==========================================================================
+       DATASET BENDA (DENGAN VARIASI VISUAL & CIRI INDERAWI/ATRIBUSI)
+       ========================================================================== */
     const dataset = [
-      { id: 1, name: "Apel Merah", icon: "🍎", category: "buah_manis", attributes: { warna: "Merah", rasa: "Manis", tempat: "Pohon" } },
-      { id: 2, name: "Apel Hijau", icon: "🍏", category: "buah_asam", attributes: { warna: "Hijau", rasa: "Asam", tempat: "Pohon" } },
-      { id: 3, name: "Pisang Matang", icon: "🍌", category: "buah_manis", attributes: { warna: "Kuning", rasa: "Manis", tempat: "Pohon" } },
-      { id: 4, name: "Lemon", icon: "🍋", category: "buah_asam", attributes: { warna: "Kuning", rasa: "Asam Segar", tempat: "Pohon" } },
-      { id: 5, name: "Bayam", icon: "🥬", category: "sayur_daun", attributes: { warna: "Hijau", rasa: "Hambar", tempat: "Batang/Tanah" } },
-      { id: 6, name: "Wortel", icon: "🥕", category: "sayur_umbi", attributes: { warna: "Oranye", rasa: "Renyah", tempat: "Dalam Tanah" } },
-      { id: 7, name: "Sepatu Olahraga", icon: "👟", category: "bukan_makanan", attributes: { warna: "Variasi", rasa: "Bukan Makanan", tempat: "Pabrik" } },
-      { id: 8, name: "Botol Plastik", icon: "🍾", category: "bukan_makanan", attributes: { warna: "Bening", rasa: "Bukan Makanan", tempat: "Pabrik" } }
+      { id: 1, name: "Apel Merah", icon: "🍎", defaultCategory: "buah_manis", attributes: { warna: "Merah", tekstur: "Halus/Renyah", rasa: "Manis", tumbuh: "Pohon" } },
+      { id: 2, name: "Apel Hijau", icon: "🍏", defaultCategory: "buah_asam", attributes: { warna: "Hijau", tekstur: "Renyah", rasa: "Asam Segar", tumbuh: "Pohon" } },
+      { id: 3, name: "Pisang Matang", icon: "🍌", defaultCategory: "buah_manis", attributes: { warna: "Kuning", tekstur: "Lembek", rasa: "Manis", tumbuh: "Pohon" } },
+      { id: 4, name: "Pisang Hijau", icon: "🍌", defaultCategory: "buah_asam", attributes: { warna: "Hijau", tekstur: "Keras", rasa: "Sepat/Asam", tumbuh: "Pohon" } },
+      { id: 5, name: "Lemon Utuh", icon: "🍋", defaultCategory: "buah_asam", attributes: { warna: "Kuning", tekstur: "Agak Kasar", rasa: "Sangat Asam", tumbuh: "Pohon" } },
+      { id: 6, name: "Jeruk Segar", icon: "🍊", defaultCategory: "buah_asam", attributes: { warna: "Oranye", tekstur: "Pori-pori", rasa: "Manis Asam", tumbuh: "Pohon" } },
+      { id: 7, name: "Stroberi", icon: "🍓", defaultCategory: "buah_asam", attributes: { warna: "Merah Bintik", tekstur: "Biji Luar", rasa: "Asam Manis", tumbuh: "Tanah/Semak" } },
+      { id: 8, name: "Anggur Merah", icon: "🍇", defaultCategory: "buah_manis", attributes: { warna: "Ungu/Merah", tekstur: "Licin/Kenyal", rasa: "Manis", tumbuh: "Pohon Merambat" } },
+      { id: 9, name: "Bayam", icon: "🥬", defaultCategory: "sayur_daun", attributes: { warna: "Hijau", tekstur: "Tipis/Tipis Daun", rasa: "Hambar/Tawar", tumbuh: "Batang Tanah" } },
+      { id: 10, name: "Brokoli", icon: "🥦", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Rindang", tekstur: "Bunga Daun", rasa: "Tawar", tumbuh: "Batang" } },
+      { id: 11, name: "Sawi Hijau", icon: "🥬", defaultCategory: "sayur_daun", attributes: { warna: "Hijau Tua", tekstur: "Daun Lebar", rasa: "Agak Pahit", tumbuh: "Tanah" } },
+      { id: 12, name: "Wortel Utuh", icon: "🥕", defaultCategory: "sayur_umbi", attributes: { warna: "Oranye", tekstur: "Keras/Panjang", rasa: "Renyah Manis", tumbuh: "Dalam Tanah" } },
+      { id: 13, name: "Wortel Potong", icon: "🥕", defaultCategory: "sayur_umbi", attributes: { warna: "Oranye", tekstur: "Potongan Bulat", rasa: "Renyah", tumbuh: "Dalam Tanah" } },
+      { id: 14, name: "Kentang", icon: "🥔", defaultCategory: "sayur_umbi", attributes: { warna: "Cokelat", tekstur: "Kulit Kasar", rasa: "Pati/Hambar", tumbuh: "Dalam Tanah" } },
+      { id: 15, name: "Jagung", icon: "🌽", defaultCategory: "sayur_umbi", attributes: { warna: "Kuning Biji", tekstur: "Biji Berbaris", rasa: "Manis Gurih", tumbuh: "Pohon Jagung" } },
+      { id: 16, name: "Sepatu Olahraga", icon: "👟", defaultCategory: "bukan_makanan", attributes: { warna: "Variasi", tekstur: "Kain/Karet", rasa: "Bukan Makanan", tumbuh: "Pabrik" } },
+      { id: 17, name: "Botol Plastik", icon: "🍾", defaultCategory: "bukan_makanan", attributes: { warna: "Bening", tekstur: "Keras Licin", rasa: "Bukan Makanan", tumbuh: "Pabrik" } },
+      { id: 18, name: "Mobil Mainan", icon: "🚗", defaultCategory: "bukan_makanan", attributes: { warna: "Merah", tekstur: "Besi/Plastik", rasa: "Bukan Makanan", tumbuh: "Pabrik" } },
+      { id: 19, name: "Batu Kali", icon: "🪨", defaultCategory: "bukan_makanan", attributes: { warna: "Abu-abu", tekstur: "Sangat Keras", rasa: "Bukan Makanan", tumbuh: "Alam/Sungai" } },
+      { id: 20, name: "Kaleng Bekas", icon: "🥫", defaultCategory: "bukan_makanan", attributes: { warna: "Seng/Mengkilap", tekstur: "Logam", rasa: "Bukan Makanan", tumbuh: "Pabrik" } }
     ];
 
     const categoryNames = {
       'buah_manis': '🍎 BUAH MANIS',
-      'buah_asam': '🍋 BUAH ASAM',
+      'buah_asam': '🍋 BUAH ASAM / SEGAR',
       'sayur_daun': '🥬 SAYUR DAUN',
       'sayur_umbi': '🥕 SAYUR UMBI',
-      'bukan_makanan': '👟 BUKAN BUAH/SAYUR'
+      'bukan_makanan': '👟 BUKAN MAKANAN'
     };
 
     const categoriesList = ['buah_manis', 'buah_asam', 'sayur_daun', 'sayur_umbi', 'bukan_makanan'];
 
+    /* STATE MANAGEMENT */
     let currentIndex = 0;
     let currentCategoryIndex = 0;
     let timerValue = 30;
     let timerInterval = null;
+    let userTrainedData = []; // Menyimpan data latih pilihan anak (termasuk jika anak salah memasukkan!)
+    let currentTestItem = null;
 
-    /* WEB AUDIO API */
+    /* WEB AUDIO API SYNTHESIZER */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -517,16 +676,22 @@
 
       if (type === 'click') {
         osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
         osc.start(); osc.stop(audioCtx.currentTime + 0.05);
       } else if (type === 'success') {
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
       }
     }
 
-    /* NAVIGATION */
+    /* NAVIGATION & PHASES */
     function switchPhase(phaseNum) {
       playSound('click');
       document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
@@ -537,29 +702,34 @@
 
       if (phaseNum === 1) renderSampleFase1();
       if (phaseNum === 2) startFase2Conveyor();
+      if (phaseNum === 3) initTestingStage();
       if (phaseNum !== 2) clearInterval(timerInterval);
     }
 
-    /* FASE 1: DRAG & DROP & ATRIBUT */
+    /* FASE 1: INPUT DATA LATIH */
     function renderSampleFase1() {
       if (currentIndex >= dataset.length) currentIndex = 0;
       const item = dataset[currentIndex];
 
       document.getElementById('sample-icon').innerText = item.icon;
       document.getElementById('sample-name').innerText = item.name;
+      document.getElementById('sample-count-text').innerText = currentIndex + 1;
+      document.getElementById('sample-total-text').innerText = dataset.length;
+      document.getElementById('trained-count-text').innerText = userTrainedData.length;
 
       const attrBox = document.getElementById('sample-attributes');
       attrBox.innerHTML = `
         <div>• <strong>Warna:</strong> ${item.attributes.warna}</div>
-        <div>• <strong>Rasa/Tekstur:</strong> ${item.attributes.rasa}</div>
-        <div>• <strong>Tumbuh/Asal:</strong> ${item.attributes.tempat}</div>
+        <div>• <strong>Tekstur/Kulit:</strong> ${item.attributes.tekstur}</div>
+        <div>• <strong>Ciri Rasa:</strong> ${item.attributes.rasa}</div>
+        <div>• <strong>Tempat Tumbuh:</strong> ${item.attributes.tumbuh}</div>
       `;
     }
 
-    function handleDragStart(e) {
-      e.dataTransfer.setData('text/plain', dataset[currentIndex].category);
-    }
+    function nextSample() { playSound('click'); currentIndex = (currentIndex + 1) % dataset.length; renderSampleFase1(); }
+    function prevSample() { playSound('click'); currentIndex = (currentIndex - 1 + dataset.length) % dataset.length; renderSampleFase1(); }
 
+    function handleDragStart(e) { e.dataTransfer.setData('text/plain', 'sample'); }
     function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
     function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
 
@@ -569,35 +739,42 @@
       assignCategory(targetCategory);
     }
 
-    function clickAssign(targetCategory) {
-      assignCategory(targetCategory);
-    }
+    function clickAssign(targetCategory) { assignCategory(targetCategory); }
 
-    function assignCategory(targetCategory) {
+    function assignCategory(chosenCategory) {
       playSound('success');
       const item = dataset[currentIndex];
-      const basket = document.getElementById(`basket-${targetCategory}`);
-      
-      const badge = document.createElement('div');
-      badge.className = 'item-badge';
-      badge.innerText = item.icon;
-      badge.title = item.name;
-      basket.appendChild(badge);
 
-      currentIndex++;
-      if (currentIndex < dataset.length) {
-        renderSampleFase1();
-      } else {
-        alert("Semua sampel pendataan awal selesai! Lanjut ke Tahap 2.");
-        switchPhase(2);
+      // Catat data latih berdasarkan pilihan siswa (meskipun salah!)
+      userTrainedData.push({ ...item, userAssignedCategory: chosenCategory });
+
+      // Visualisasi badge di keranjang
+      const basket = document.getElementById(`basket-fase1-${chosenCategory}`);
+      if (basket) {
+        const badge = document.createElement('div');
+        badge.className = 'item-badge';
+        badge.innerText = item.icon;
+        badge.title = `${item.name} (Dimasukkan ke: ${chosenCategory})`;
+        basket.appendChild(badge);
       }
+
+      currentIndex = (currentIndex + 1) % dataset.length;
+      renderSampleFase1();
+    }
+
+    function skipToPhase2() {
+      if (userTrainedData.length === 0) {
+        alert("Kamu belum memasukkan satu pun data latih! Masukkan setidaknya 2-3 contoh data agar AI bisa belajar.");
+        return;
+      }
+      switchPhase(2);
     }
 
     /* FASE 2: BAN BERJALAN & TIMER 30 DETIK */
     function startFase2Conveyor() {
       currentCategoryIndex = 0;
       updateTargetCategoryDisplay();
-      spawnConveyorItems();
+      spawnMovingItems();
       resetTimer();
     }
 
@@ -625,26 +802,27 @@
       }, 1000);
     }
 
-    function spawnConveyorItems() {
-      const area = document.getElementById('conveyor-area-2');
-      // Spawn items dynamically
+    function spawnMovingItems() {
+      const zone = document.getElementById('conveyor-left-zone');
+      
       setInterval(() => {
         if (!document.getElementById('phase2').classList.contains('active')) return;
 
         const randomItem = dataset[Math.floor(Math.random() * dataset.length)];
         const el = document.createElement('div');
         el.className = 'moving-item';
-        el.innerHTML = `<div style="font-size:2rem">${randomItem.icon}</div><div style="font-size:0.65rem; font-weight:bold;">${randomItem.name}</div>`;
+        el.innerHTML = `<div style="font-size:2.2rem">${randomItem.icon}</div><div style="font-size:0.65rem; font-weight:bold; text-align:center;">${randomItem.name}</div>`;
         
-        let pos = -90;
+        let pos = -80;
         el.style.left = pos + 'px';
-        area.appendChild(el);
+        zone.appendChild(el);
 
         const moveAnim = setInterval(() => {
           pos += 2;
           el.style.left = pos + 'px';
 
-          if (pos > area.clientWidth) {
+          // Jika mendekati mesin (kanan zone)
+          if (pos > zone.clientWidth - 40) {
             clearInterval(moveAnim);
             el.remove();
           }
@@ -652,16 +830,96 @@
 
         el.onclick = () => {
           const activeCategory = categoriesList[currentCategoryIndex];
-          if (randomItem.category === activeCategory) {
-            playSound('success');
-            el.style.border = '3px solid #00e676';
-            setTimeout(() => el.remove(), 200);
-          } else {
-            playSound('click');
-            alert(`Item ini tergolong '${randomItem.category}', bukan kategori aktif!`);
+          
+          // Masukkan ke data latih tambahan
+          userTrainedData.push({ ...randomItem, userAssignedCategory: activeCategory });
+
+          // Tambahkan ke keranjang hasil kanan
+          const rightBasket = document.getElementById(`basket-fase2-${activeCategory}`);
+          if (rightBasket) {
+            const badge = document.createElement('span');
+            badge.className = 'item-badge';
+            badge.innerText = randomItem.icon;
+            badge.title = randomItem.name;
+            rightBasket.appendChild(badge);
           }
+
+          playSound('success');
+          clearInterval(moveAnim);
+          el.remove();
         };
-      }, 3500);
+      }, 3000);
+    }
+
+    /* FASE 3: UJI PREDIKSI AI (BERDASARKAN DATA LATIH SISWA) */
+    function initTestingStage() {
+      document.getElementById('machine-screen-test').innerText = "KLIK 'JALANKAN SORTIR' UNTUK MENGUJI AI";
+      prepareTestItem();
+    }
+
+    function prepareTestItem() {
+      const zone = document.getElementById('test-left-zone');
+      zone.innerHTML = '<div class="conveyor-belt-track"></div>';
+
+      currentTestItem = dataset[Math.floor(Math.random() * dataset.length)];
+
+      const el = document.createElement('div');
+      el.className = 'moving-item';
+      el.style.left = '40%';
+      el.innerHTML = `<div style="font-size:2.5rem">${currentTestItem.icon}</div><div style="font-size:0.75rem; font-weight:bold;">${currentTestItem.name}</div>`;
+      zone.appendChild(el);
+    }
+
+    function runAutoTest() {
+      playSound('click');
+      if (!currentTestItem) return;
+
+      const screen = document.getElementById('machine-screen-test');
+      screen.innerText = "MENGANALISIS ATRIBUT...\nMENCARI POLA...";
+
+      setTimeout(() => {
+        let predictedCategory = currentTestItem.defaultCategory;
+
+        // CEK MODEL AI: Jika siswa pernah melatih item ini dengan kategori tertentu (meskipun salah), AI akan menirunya!
+        const matchTrained = userTrainedData.filter(t => t.id === currentTestItem.id);
+        if (matchTrained.length > 0) {
+          // Ambil masukan terakhir dari siswa
+          predictedCategory = matchTrained[matchTrained.length - 1].userAssignedCategory;
+        }
+
+        playSound('success');
+        screen.innerText = `PREDIKSI AI:\n${categoryNames[predictedCategory]}`;
+
+        // Tambahkan ke keranjang hasil
+        const outBasket = document.getElementById('test-output-basket');
+        const badge = document.createElement('div');
+        badge.className = 'item-badge';
+        badge.innerText = `${currentTestItem.icon} (${currentTestItem.name})`;
+        outBasket.appendChild(badge);
+
+        setTimeout(prepareTestItem, 2500);
+      }, 1200);
+    }
+
+    /* RESET ALL DATA */
+    function resetAllData() {
+      if (confirm("Apakah kamu yakin ingin mengosongkan memori AI dan mengulang dari awal?")) {
+        playSound('wrong');
+        userTrainedData = [];
+        currentIndex = 0;
+        
+        // Clear baskets
+        categoriesList.forEach(cat => {
+          const b1 = document.getElementById(`basket-fase1-${cat}`);
+          const b2 = document.getElementById(`basket-fase2-${cat}`);
+          if (b1) b1.innerHTML = '';
+          if (b2) b2.innerHTML = '';
+        });
+        const testBasket = document.getElementById('test-output-basket');
+        if (testBasket) testBasket.innerHTML = '';
+
+        switchPhase(1);
+      }
     }
 
     // Init
