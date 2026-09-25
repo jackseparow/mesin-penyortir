@@ -1,1067 +1,849 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesin Penyortir Buah & Sayur - Belajar AI untuk Anak</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Fredoka', 'Nunito', sans-serif;
-            background-color: #f0fdf4;
-            user-select: none;
-        }
-        
-        .tab-btn.active {
-            background-color: #10b981;
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-            transform: translateY(-2px);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesin Penyortir Buah dan Sayur - BBGTK DIY</title>
+  <style>
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #f57c00;
+      --bg-color: #e8f5e9;
+      --panel-bg: #ffffff;
+      --machine-color: #37474f;
+      --machine-accent: #26a69a;
+      --text-color: #263238;
+    }
 
-        .conveyor-belt {
-            background: repeating-linear-gradient(
-                90deg,
-                #334155,
-                #334155 20px,
-                #1e293b 20px,
-                #1e293b 40px
-            );
-            animation: moveConveyor 1.5s linear infinite paused;
-        }
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
 
-        .conveyor-running {
-            animation-play-state: running;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        @keyframes moveConveyor {
-            0% { background-position: 0 0; }
-            100% { background-position: 40px 0; }
-        }
+    /* Header & Branding */
+    header {
+      background: linear-gradient(135deg, #1b5e20, #388e3c);
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-        /* Animasi buah berjalan di atas conveyor dari kiri ke kanan */
-        @keyframes moveItemOnBelt {
-            0% {
-                left: -10%;
-                opacity: 0;
-            }
-            15% {
-                opacity: 1;
-            }
-            85% {
-                opacity: 1;
-            }
-            100% {
-                left: 105%;
-                opacity: 0;
-            }
-        }
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-        .item-moving {
-            animation: moveItemOnBelt 3s linear forwards;
-        }
+    .brand-logos {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
 
-        .gear-spin {
-            animation: spin 4s linear infinite;
-        }
+    .logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
 
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
+    .brand-title h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-        .bounce-gentle {
-            animation: bounce 2s ease-in-out infinite;
-        }
+    .brand-title p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
+    /* Navigation / Phase Tabs */
+    .phase-nav {
+      display: flex;
+      justify-content: center;
+      background-color: #ffffff;
+      padding: 8px;
+      gap: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-        .drop-zone {
-            transition: all 0.2s ease;
-        }
+    .nav-btn {
+      padding: 10px 20px;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      background-color: #f1f8e9;
+      color: #33691e;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .drop-zone.drag-over {
-            transform: scale(1.03);
-            border-color: #10b981;
-            background-color: #ecfdf5;
-        }
+    .nav-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: #1b5e20;
+    }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Main Workspace */
+    main {
+      flex: 1;
+      padding: 20px;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .phase-panel {
+      display: none;
+      background: var(--panel-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .phase-panel.active {
+      display: flex;
+    }
+
+    .instruction-box {
+      background-color: #e3f2fd;
+      border-left: 5px solid #1e88e5;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+      color: #0d47a1;
+    }
+
+    /* Fase 1: Single Sample View */
+    .sample-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card-single {
+      width: 180px;
+      height: 220px;
+      background: #fdfdfd;
+      border: 3px solid #81c784;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card-single:hover {
+      transform: translateY(-5px);
+    }
+
+    .item-icon {
+      font-size: 4.5rem;
+      margin-bottom: 12px;
+    }
+
+    .item-name {
+      font-weight: bold;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .item-attr {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* Conveyor Belt System (Fase 2 & 3) */
+    .conveyor-stage {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #eceff1;
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      min-height: 380px;
+      gap: 16px;
+    }
+
+    /* Belt Track */
+    .conveyor-belt {
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: repeating-linear-gradient(
+        90deg,
+        #455a64,
+        #455a64 20px,
+        #37474f 20px,
+        #37474f 40px
+      );
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+      animation: moveBelt 2s linear infinite paused;
+    }
+
+    .conveyor-belt.running {
+      animation-play-state: running;
+    }
+
+    @keyframes moveBelt {
+      from { background-position: 0 0; }
+      to { background-position: 40px 0; }
+    }
+
+    /* Moving Items Container */
+    .belt-items-container {
+      position: absolute;
+      bottom: 90px;
+      left: 20px;
+      display: flex;
+      gap: 40px;
+      transition: transform 0.5s ease;
+    }
+
+    .belt-item {
+      width: 90px;
+      height: 100px;
+      background: white;
+      border: 2px solid #b0bec5;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: all 0.2s ease;
+    }
+
+    .belt-item.selected {
+      border-color: #ff9800;
+      transform: scale(1.15) translateY(-10px);
+      box-shadow: 0 8px 16px rgba(255, 152, 0, 0.4);
+    }
+
+    /* AI Machine Component */
+    .machine-body {
+      background: linear-gradient(145deg, #37474f, #263238);
+      border-radius: 20px;
+      padding: 20px;
+      color: white;
+      width: 320px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      z-index: 2;
+      border: 4px solid #546e7a;
+    }
+
+    .machine-screen {
+      background: #000;
+      border: 3px solid #00e676;
+      border-radius: 8px;
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      color: #00e676;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      box-shadow: inset 0 0 10px rgba(0, 230, 118, 0.5);
+    }
+
+    .machine-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .category-btn {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category-btn:hover {
+      transform: scale(1.02);
+    }
+
+    .category-btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-fruit-sweet { background-color: #e91e63; }
+    .btn-fruit-sour  { background-color: #ff9800; }
+    .btn-veg-leaf    { background-color: #4caf50; }
+    .btn-veg-tuber   { background-color: #795548; }
+    .btn-non-food    { background-color: #607d8b; }
+
+    /* Output Baskets (Right Side) */
+    .baskets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+      width: 200px;
+    }
+
+    .basket {
+      background: #fff8e1;
+      border: 2px dashed #ffa000;
+      border-radius: 12px;
+      padding: 10px;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .basket-title {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #ff8f00;
+      text-transform: uppercase;
+    }
+
+    .basket-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .basket-item-badge {
+      font-size: 1.2rem;
+      background: white;
+      padding: 2px 6px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Common Buttons */
+    .action-btn {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+    }
+
+    .action-btn:hover {
+      background-color: #e65100;
+    }
+
+    /* Verification Section (Fase 3) */
+    .verify-panel {
+      background: #f1f8e9;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #c8e6c9;
+    }
+
+    .verify-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-check {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+    }
+
+    .btn-check-correct { background-color: #4caf50; }
+    .btn-check-wrong { background-color: #f44336; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.85rem;
+      color: #78909c;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+    }
+  </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col justify-between">
+<body>
 
-    <!-- Header Navbar dengan Logo BBGTK DIY & Maskot Si Yo -->
-    <header class="bg-emerald-600 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-            
-            <!-- Branding Group Kiri Atas -->
-            <div class="flex items-center space-x-3">
-                <!-- Logo BBGTK DIY & Maskot Si Yo -->
-                <div class="flex items-center space-x-2 bg-white/10 p-1.5 rounded-2xl border border-emerald-500/30">
-                    <img src="bbgtk diy logo.png" alt="Logo BBGTK DIY" onerror="this.onerror=null; this.src='https://via.placeholder.com/40?text=BBGTK';" class="h-10 w-auto object-contain rounded-lg">
-                    <img src="maskot-siyo.png" alt="Maskot Si Yo" onerror="this.onerror=null; this.src='https://via.placeholder.com/40?text=SiYo';" class="h-10 w-auto object-contain rounded-lg">
-                </div>
+  <!-- Header & Logos -->
+  <header>
+    <div class="brand-container">
+      <div class="brand-logos">
+        <img src="bbgtk diy logo.png" alt="Logo BBGTK DIY" class="logo-img" onerror="this.src='https://via.placeholder.com/120x48?text=BBGTK+DIY'">
+        <img src="maskot-siyo.png" alt="Maskot Si Yo" class="logo-img" onerror="this.src='https://via.placeholder.com/48x48?text=Si+Yo'">
+      </div>
+      <div class="brand-title">
+        <h1>Mesin Penyortir AI</h1>
+        <p>BBGTK DIY - Media Pembelajaran AI Anak</p>
+      </div>
+    </div>
+  </header>
 
-                <div>
-                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">Mesin Penyortir Buah & Sayur</h1>
-                    <p class="text-xs text-emerald-100 font-medium">Petualangan Belajar Artificial Intelligence (AI) Bersama Si Yo</p>
-                </div>
-            </div>
+  <!-- Navigation / Phases -->
+  <nav class="phase-nav">
+    <button class="nav-btn active" id="btn-phase1" onclick="switchPhase(1)">
+      <span>1. Pendataan</span>
+    </button>
+    <button class="nav-btn" id="btn-phase2" onclick="switchPhase(2)">
+      <span>2. Latih AI (Game)</span>
+    </button>
+    <button class="nav-btn" id="btn-phase3" onclick="switchPhase(3)">
+      <span>3. Uji Mesin</span>
+    </button>
+  </nav>
 
-            <!-- Global Status Badge -->
-            <div id="aiStatusBadge" class="bg-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-emerald-500">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-                <span>Status AI: Belum Dilatih (0 Data)</span>
-            </div>
+  <!-- Main Content Areas -->
+  <main>
+
+    <!-- FASE 1: PENDATAAN SAMPEL (Satu per Satu) -->
+    <section id="phase1" class="phase-panel active">
+      <div class="instruction-box">
+        <strong>Tahap 1: Mengenal Sampel Data.</strong> Amati buah, sayur, dan objek berikut satu per satu. Kenali atribut visualnya sebelum melatih AI.
+      </div>
+
+      <div class="sample-display">
+        <div class="card-single" id="single-card">
+          <div class="item-icon" id="sample-icon">🍎</div>
+          <div class="item-name" id="sample-name">Apel Merah</div>
+          <div class="item-attr" id="sample-attr">Warna: Merah | Rasa: Manis</div>
         </div>
-    </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
-        <!-- Navigation Tabs -->
-        <div class="flex justify-center mb-6">
-            <div class="bg-emerald-100 p-1.5 rounded-3xl flex gap-2 shadow-inner max-w-full overflow-x-auto">
-                <button onclick="switchTab('tab1')" id="btnTab1" class="tab-btn active px-5 py-2.5 rounded-2xl text-sm md:text-base font-bold transition-all flex items-center gap-2 whitespace-nowrap">
-                    <span>1. Latih AI (Input Data)</span>
-                </button>
-                <button onclick="switchTab('tab2')" id="btnTab2" class="tab-btn px-5 py-2.5 rounded-2xl text-sm md:text-base font-bold text-emerald-800 hover:bg-emerald-200 transition-all flex items-center gap-2 whitespace-nowrap">
-                    <span>2. Proses Belajar</span>
-                </button>
-                <button onclick="switchTab('tab3')" id="btnTab3" class="tab-btn px-5 py-2.5 rounded-2xl text-sm md:text-base font-bold text-emerald-800 hover:bg-emerald-200 transition-all flex items-center gap-2 whitespace-nowrap">
-                    <span>3. Uji Mesin AI</span>
-                </button>
-            </div>
+        <div style="display: flex; gap: 12px;">
+          <button class="action-btn" style="background:#546e7a" onclick="prevSample()">← Sebelumnya</button>
+          <button class="action-btn" onclick="nextSample()">Selanjutnya →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FASE 2: PELATIHAN (Game Ban Berjalan) -->
+    <section id="phase2" class="phase-panel">
+      <div class="instruction-box">
+        <strong>Tahap 2: Pelatihan Interaktif!</strong> Klik objek di ban berjalan, lalu klik tombol Kategori pada <strong>Body Mesin</strong> yang sesuai.
+      </div>
+
+      <div class="conveyor-stage">
+        <!-- Item di Ban Berjalan -->
+        <div class="belt-items-container" id="training-items-container">
+          <!-- Items injected via JS -->
         </div>
 
-        <!-- ==================== TAB 1: INPUT DATA & LABELING ==================== -->
-        <section id="tab1" class="space-y-6">
-            <div class="bg-white p-4 rounded-3xl border-2 border-emerald-100 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl">🧺</span>
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-800">Tahap 1: Beri Makan Data ke AI (Data Labeling)</h2>
-                        <p class="text-xs text-slate-500">Tarik atau masukkan buah & sayur ke keranjang yang sesuai agar Si Yo & AI belajar ciri-cirinya!</p>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="autoFillData()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-3 py-2 rounded-xl transition border border-amber-300 flex items-center gap-1">
-                        ⚡ Isi Otomatis Contoh Data
-                    </button>
-                    <button onclick="clearAllData()" class="text-xs bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold px-3 py-2 rounded-xl transition border border-rose-300">
-                        🗑️ Kosongkan Data
-                    </button>
-                </div>
-            </div>
+        <!-- Conveyor Track -->
+        <div class="conveyor-belt" id="belt-2"></div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Item Card Queue (Left Column) -->
-                <div class="lg:col-span-4 bg-white p-5 rounded-3xl border-2 border-slate-100 shadow-sm flex flex-col items-center">
-                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Item Yang Harus Disortir</h3>
-                    
-                    <div id="activeCardContainer" class="w-full flex flex-col items-center">
-                        <!-- Active Card will be rendered here by JS -->
-                    </div>
+        <!-- Body Mesin AI (Panel Kontrol Kategori) -->
+        <div class="machine-body">
+          <div style="font-weight:bold; font-size:1.1rem; color:#eceff1;">PANEL KATEGORI AI</div>
+          <div class="machine-screen" id="machine-screen-2">
+            PILIH OBJEK DI BAN BERJALAN DAHULU
+          </div>
+          <div class="machine-buttons">
+            <button class="category-btn btn-fruit-sweet" onclick="classifySelectedItem('buah_manis')">
+              <span>🍎 Buah Manis</span>
+            </button>
+            <button class="category-btn btn-fruit-sour" onclick="classifySelectedItem('buah_asam')">
+              <span>🍋 Buah Asam</span>
+            </button>
+            <button class="category-btn btn-veg-leaf" onclick="classifySelectedItem('sayur_daun')">
+              <span>🥬 Sayur Daun</span>
+            </button>
+            <button class="category-btn btn-veg-tuber" onclick="classifySelectedItem('sayur_umbi')">
+              <span>🥕 Sayur Umbi</span>
+            </button>
+            <button class="category-btn btn-non-food" onclick="classifySelectedItem('bukan_makanan')">
+              <span>👟 Bukan Buah/Sayur</span>
+            </button>
+          </div>
+        </div>
 
-                    <!-- Small Queue Preview -->
-                    <div class="mt-4 w-full">
-                        <p class="text-xs font-bold text-slate-400 mb-2">Sisa Antrean Item:</p>
-                        <div id="queueList" class="flex gap-2 overflow-x-auto py-2 px-1">
-                            <!-- Small queue icons here -->
-                        </div>
-                    </div>
-                </div>
+        <!-- Keranjang Output (Kanan Mesin) -->
+        <div class="baskets-container">
+          <div class="basket">
+            <div class="basket-title">Buah Manis</div>
+            <div class="basket-items" id="basket-buah_manis"></div>
+          </div>
+          <div class="basket">
+            <div class="basket-title">Buah Asam</div>
+            <div class="basket-items" id="basket-buah_asam"></div>
+          </div>
+          <div class="basket">
+            <div class="basket-title">Sayur Daun</div>
+            <div class="basket-items" id="basket-sayur_daun"></div>
+          </div>
+          <div class="basket">
+            <div class="basket-title">Sayur Umbi</div>
+            <div class="basket-items" id="basket-sayur_umbi"></div>
+          </div>
+          <div class="basket">
+            <div class="basket-title">Bukan Makanan</div>
+            <div class="basket-items" id="basket-bukan_makanan"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-                <!-- Baskets Grid (Right Column) -->
-                <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    
-                    <!-- Basket 1: Buah Manis -->
-                    <div id="basket-buah-manis" ondragover="allowDrop(event)" ondragleave="removeDragOver('basket-buah-manis')" ondrop="handleDrop(event, 'buah', 'manis')"
-                        class="drop-zone bg-amber-50/70 border-2 border-dashed border-amber-300 rounded-3xl p-4 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-2xl">🍎</span>
-                                <span id="count-buah-manis" class="text-xs font-bold bg-amber-200 text-amber-800 px-2.5 py-1 rounded-full">0 Item</span>
-                            </div>
-                            <h4 class="font-bold text-amber-900">BUAH - Manis</h4>
-                            <p class="text-xs text-amber-700 mt-1">Contoh: Pisang, Mangga, Apel, Semangka</p>
-                        </div>
-                        <div id="items-buah-manis" class="flex flex-wrap gap-1.5 mt-3 min-h-[50px] p-2 bg-white/60 rounded-2xl border border-amber-200">
-                            <!-- Drop items list -->
-                        </div>
-                        <button onclick="sortActiveItem('buah', 'manis')" class="mt-3 w-full bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold py-2 rounded-xl text-xs transition shadow-sm">
-                            + Masukkan Ke Sini
-                        </button>
-                    </div>
+    <!-- FASE 3: UJI MESIN & VALIDASI SISWA -->
+    <section id="phase3" class="phase-panel">
+      <div class="instruction-box">
+        <strong>Tahap 3: Pengujian Otomatis.</strong> Mesin AI akan memprediksi item yang lewat. Periksa apakah hasil sortirannya sudah benar!
+      </div>
 
-                    <!-- Basket 2: Buah Asam -->
-                    <div id="basket-buah-asam" ondragover="allowDrop(event)" ondragleave="removeDragOver('basket-buah-asam')" ondrop="handleDrop(event, 'buah', 'asam')"
-                        class="drop-zone bg-yellow-50/70 border-2 border-dashed border-yellow-300 rounded-3xl p-4 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-2xl">🍋</span>
-                                <span id="count-buah-asam" class="text-xs font-bold bg-yellow-200 text-yellow-800 px-2.5 py-1 rounded-full">0 Item</span>
-                            </div>
-                            <h4 class="font-bold text-yellow-900">BUAH - Asam / Segar</h4>
-                            <p class="text-xs text-yellow-700 mt-1">Contoh: Lemon, Jeruk Nipis, Stroberi</p>
-                        </div>
-                        <div id="items-buah-asam" class="flex flex-wrap gap-1.5 mt-3 min-h-[50px] p-2 bg-white/60 rounded-2xl border border-yellow-200">
-                            <!-- Drop items list -->
-                        </div>
-                        <button onclick="sortActiveItem('buah', 'asam')" class="mt-3 w-full bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-white font-bold py-2 rounded-xl text-xs transition shadow-sm">
-                            + Masukkan Ke Sini
-                        </button>
-                    </div>
+      <div class="conveyor-stage">
+        <!-- Item Misteri -->
+        <div class="belt-items-container" id="test-items-container">
+          <!-- Single moving test item -->
+        </div>
 
-                    <!-- Basket 3: Sayur Daun -->
-                    <div id="basket-sayur-daun" ondragover="allowDrop(event)" ondragleave="removeDragOver('basket-sayur-daun')" ondrop="handleDrop(event, 'sayur', 'daun')"
-                        class="drop-zone bg-emerald-50/70 border-2 border-dashed border-emerald-300 rounded-3xl p-4 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-2xl">🥬</span>
-                                <span id="count-sayur-daun" class="text-xs font-bold bg-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full">0 Item</span>
-                            </div>
-                            <h4 class="font-bold text-emerald-900">SAYUR - Daun</h4>
-                            <p class="text-xs text-emerald-700 mt-1">Contoh: Bayam, Sawi, Kangkung, Brokoli</p>
-                        </div>
-                        <div id="items-sayur-daun" class="flex flex-wrap gap-1.5 mt-3 min-h-[50px] p-2 bg-white/60 rounded-2xl border border-emerald-200">
-                            <!-- Drop items list -->
-                        </div>
-                        <button onclick="sortActiveItem('sayur', 'daun')" class="mt-3 w-full bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold py-2 rounded-xl text-xs transition shadow-sm">
-                            + Masukkan Ke Sini
-                        </button>
-                    </div>
+        <div class="conveyor-belt running" id="belt-3"></div>
 
-                    <!-- Basket 4: Sayur Umbi/Biji -->
-                    <div id="basket-sayur-umbi" ondragover="allowDrop(event)" ondragleave="removeDragOver('basket-sayur-umbi')" ondrop="handleDrop(event, 'sayur', 'umbi')"
-                        class="drop-zone bg-orange-50/70 border-2 border-dashed border-orange-300 rounded-3xl p-4 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-2xl">🥕</span>
-                                <span id="count-sayur-umbi" class="text-xs font-bold bg-orange-200 text-orange-800 px-2.5 py-1 rounded-full">0 Item</span>
-                            </div>
-                            <h4 class="font-bold text-orange-900">SAYUR - Umbi / Biji</h4>
-                            <p class="text-xs text-orange-700 mt-1">Contoh: Wortel, Kentang, Jagung</p>
-                        </div>
-                        <div id="items-sayur-umbi" class="flex flex-wrap gap-1.5 mt-3 min-h-[50px] p-2 bg-white/60 rounded-2xl border border-orange-200">
-                            <!-- Drop items list -->
-                        </div>
-                        <button onclick="sortActiveItem('sayur', 'umbi')" class="mt-3 w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-bold py-2 rounded-xl text-xs transition shadow-sm">
-                            + Masukkan Ke Sini
-                        </button>
-                    </div>
+        <!-- Machine Processing -->
+        <div class="machine-body">
+          <div style="font-weight:bold; font-size:1.1rem; color:#eceff1;">MESIN OTOMATIS AI</div>
+          <div class="machine-screen" id="machine-screen-3">
+            MENUNGGU ITEM...
+          </div>
+          <button class="action-btn" onclick="runAutoSort()" id="btn-run-test">Jalankan Sortir</button>
+        </div>
 
-                </div>
-            </div>
-        </section>
+        <!-- Keranjang Hasil Pengujian -->
+        <div class="baskets-container">
+          <div class="basket">
+            <div class="basket-title">Hasil Sortir AI</div>
+            <div class="basket-items" id="test-output-basket"></div>
+          </div>
+        </div>
+      </div>
 
-        <!-- ==================== TAB 2: PROSES BELAJAR / TRAINING ==================== -->
-        <section id="tab2" class="space-y-6 hidden">
-            <div class="bg-white p-5 rounded-3xl border-2 border-emerald-100 shadow-sm text-center max-w-2xl mx-auto">
-                <span class="text-4xl inline-block mb-2 bounce-gentle">🧠</span>
-                <h2 class="text-xl font-bold text-slate-800">Tahap 2: Otak AI Mempelajari Pola Fitur</h2>
-                <p class="text-xs text-slate-500 mt-1">AI tidak langsung pintar. AI membaca ciri-ciri (Warna, Tempat Tumbuh, Rasa) dari data yang kamu berikan di Tab 1!</p>
-                
-                <div class="mt-4 flex justify-center gap-3">
-                    <button id="startTrainBtn" onclick="runTrainingProcess()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-base font-bold px-6 py-3 rounded-2xl shadow-lg hover:shadow-emerald-200 transition-all active:scale-95 flex items-center gap-2">
-                        <span>⚙️ Mulai Latih AI Sekarang!</span>
-                    </button>
-                </div>
-            </div>
+      <!-- Panel Pemeriksaan Siswa -->
+      <div class="verify-panel" id="verify-panel" style="display:none;">
+        <div>
+          <strong>Evaluasi Siswa:</strong> Apakah prediksi mesin untuk item terakhir sudah benar?
+        </div>
+        <div class="verify-buttons">
+          <button class="btn-check btn-check-correct" onclick="verifyResult(true)">✓ Benar</button>
+          <button class="btn-check btn-check-wrong" onclick="verifyResult(false)">✗ Salah (AI Butuh Belajar Lagi)</button>
+        </div>
+      </div>
+    </section>
 
-            <!-- Training Visualizer Card -->
-            <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl relative overflow-hidden">
-                <!-- Decorative Gears -->
-                <div class="absolute -right-8 -bottom-8 opacity-20 text-9xl gear-spin">⚙️</div>
-                <div class="absolute -left-6 -top-6 opacity-20 text-8xl gear-spin" style="animation-direction: reverse;">⚙️</div>
+  </main>
 
-                <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                    <!-- Left Status -->
-                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
-                        <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-2">1. Ringkasan Data Input</h4>
-                        <div class="space-y-1.5 text-xs">
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">Total Sample:</span>
-                                <span id="summaryTotalSample" class="font-bold text-amber-300">0 Items</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">Variasi Warna:</span>
-                                <span id="summaryColors" class="font-bold text-slate-200">-</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">Variasi Rasa:</span>
-                                <span id="summaryTastes" class="font-bold text-slate-200">-</span>
-                            </div>
-                        </div>
-                    </div>
+  <!-- Footer -->
+  <footer>
+    &copy; 2026 BBGTK DIY - Balai Besar Guru Penggerak / Balai Guru Penggerak. Dibuat untuk Edukasi AI Anak.
+  </footer>
 
-                    <!-- Center Animation / Brain Grid -->
-                    <div class="text-center space-y-3">
-                        <div id="brainStatusIcon" class="text-6xl transition-transform duration-300">🤖</div>
-                        <h3 id="brainStatusText" class="text-lg font-bold text-emerald-300">Menunggu Pelatihan...</h3>
-                        
-                        <!-- Progress Bar -->
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden border border-slate-700 p-0.5">
-                            <div id="trainingProgressBar" class="bg-gradient-to-r from-emerald-500 to-amber-400 h-full rounded-full w-0 transition-all duration-300"></div>
-                        </div>
-                    </div>
+  <script>
+    /* ==========================================================================
+       DATASET ITEM (Termasuk Variasi Visual & Object Bukan Buah/Sayur)
+       ========================================================================== */
+    const dataset = [
+      { id: 1, name: "Apel Merah", icon: "🍎", category: "buah_manis", color: "Merah" },
+      { id: 2, name: "Apel Hijau", icon: "🍏", category: "buah_asam", color: "Hijau" },
+      { id: 3, name: "Pisang Matang", icon: "🍌", category: "buah_manis", color: "Kuning" },
+      { id: 4, name: "Pisang Hijau", icon: "🍌", category: "buah_asam", color: "Hijau" },
+      { id: 5, name: "Lemon Utuh", icon: "🍋", category: "buah_asam", color: "Kuning" },
+      { id: 6, name: "Jeruk Segar", icon: "🍊", category: "buah_asam", color: "Oranye" },
+      { id: 7, name: "Bayam", icon: "🥬", category: "sayur_daun", color: "Hijau" },
+      { id: 8, name: "Brokoli", icon: "🥦", category: "sayur_daun", color: "Hijau" },
+      { id: 9, name: "Wortel Utuh", icon: "🥕", category: "sayur_umbi", color: "Oranye" },
+      { id: 10, name: "Kentang", icon: "🥔", category: "sayur_umbi", color: "Cokelat" },
+      { id: 11, name: "Sepatu Olahraga", icon: "👟", category: "bukan_makanan", color: "Variasi" },
+      { id: 12, name: "Botol Plastik", icon: "🍾", category: "bukan_makanan", color: "Bening" },
+      { id: 13, name: "Mobil Mainan", icon: "🚗", category: "bukan_makanan", color: "Merah" },
+      { id: 14, name: "Batu Kali", icon: "🪨", category: "bukan_makanan", color: "Abu-abu" }
+    ];
 
-                    <!-- Right Learned Weights -->
-                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
-                        <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-2">2. Bobot Pola Terbentuk</h4>
-                        <div class="space-y-2 text-xs">
-                            <div>
-                                <div class="flex justify-between text-[11px] mb-0.5">
-                                    <span class="text-slate-400">Pola Warna Hijau -> Sayur Daun</span>
-                                    <span id="weightGreen" class="text-emerald-400 font-bold">0%</span>
-                                </div>
-                                <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                                    <div id="barWeightGreen" class="bg-emerald-400 h-full w-0 transition-all duration-500"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[11px] mb-0.5">
-                                    <span class="text-slate-400">Pola Rasa Manis -> Buah Manis</span>
-                                    <span id="weightSweet" class="text-amber-400 font-bold">0%</span>
-                                </div>
-                                <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                                    <div id="barWeightSweet" class="bg-amber-400 h-full w-0 transition-all duration-500"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[11px] mb-0.5">
-                                    <span class="text-slate-400">Pola Dalam Tanah -> Sayur Umbi</span>
-                                    <span id="weightSoil" class="text-orange-400 font-bold">0%</span>
-                                </div>
-                                <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                                    <div id="barWeightSoil" class="bg-orange-400 h-full w-0 transition-all duration-500"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    /* ==========================================================================
+       STATE MANAGEMENT
+       ========================================================================== */
+    let sampleIndex = 0;
+    let selectedBeltItemId = null;
+    let trainedData = [];
+    let currentTestItem = null;
 
-            <!-- Garbage In Garbage Out Warning Box -->
-            <div class="bg-amber-50 border-2 border-amber-200 rounded-3xl p-5 flex flex-col md:flex-row items-center gap-4">
-                <div class="text-4xl bg-amber-100 p-3 rounded-2xl">⚠️</div>
-                <div class="text-xs md:text-sm text-amber-900">
-                    <h4 class="font-bold text-base mb-1">Prinsip Penting AI: "Garbage In, Garbage Out"!</h4>
-                    <p>Jika kamu salah memasukkan data di Tab 1 (misalnya menaruh <b>Lemon</b> di keranjang <b>Buah Manis</b>), AI akan menganggap Lemon adalah contoh makanan manis. Hasil prediksi nanti pasti ikut <b>SALAH</b>! Kualitas keputusan AI tergantung pada kebenaran data manusia.</p>
-                </div>
-            </div>
-        </section>
+    /* ==========================================================================
+       WEB AUDIO API (SOUND SYNTHESIZER)
+       ========================================================================== */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        <!-- ==================== TAB 3: TESTING & CONVEYOR SIMULATOR ==================== -->
-        <section id="tab3" class="space-y-6 hidden">
-            <div class="bg-white p-4 rounded-3xl border-2 border-emerald-100 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl">🏭</span>
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-800">Tahap 3: Uji Coba Ban Berjalan & Penyortiran AI</h2>
-                        <p class="text-xs text-slate-500">Perhatikan buah/sayur berjalan dari kiri ke kanan masuk ke Mesin AI, lalu periksa apakah hasil sortirnya sudah benar!</p>
-                    </div>
-                </div>
-                <button onclick="resetAIMemory()" class="text-xs bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-2.5 rounded-2xl transition shadow-md flex items-center gap-1.5">
-                    <span>🔄 Reset Memori AI</span>
-                </button>
-            </div>
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
 
-            <!-- Conveyor Belt Animation View -->
-            <div class="bg-slate-900 p-6 rounded-3xl shadow-xl overflow-hidden text-white relative border-4 border-slate-700">
-                
-                <!-- Conveyor Top Controls -->
-                <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Sistem Ban Berjalan Otomatis</span>
-                    </div>
-                    <div class="text-xs text-slate-400">Total Item Diuji: <span id="testItemCounter" class="font-bold text-amber-300">0</span></div>
-                </div>
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } else if (type === 'success') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08); // E5
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16); // G5
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(140, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      }
+    }
 
-                <!-- Conveyor & Machine Container -->
-                <div class="relative my-8 py-4 flex items-center justify-between min-h-[160px] bg-slate-950/60 rounded-2xl border border-slate-800 px-4">
-                    
-                    <!-- Conveyor Belt Track -->
-                    <div id="conveyorBeltGraphic" class="conveyor-belt absolute left-0 right-0 top-1/2 -translate-y-1/2 h-14 border-y-4 border-slate-900"></div>
+    /* ==========================================================================
+       NAVIGATION & PHASES
+       ========================================================================== */
+    function switchPhase(phaseNum) {
+      playSound('click');
+      document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-                    <!-- Moving Item on Conveyor -->
-                    <div id="movingItemContainer" class="absolute top-1/2 -translate-y-1/2 -left-32 transition-none z-10">
-                        <div class="bg-white text-slate-900 px-4 py-2 rounded-2xl shadow-2xl border-2 border-cyan-400 flex flex-col items-center">
-                            <span id="testItemEmoji" class="text-4xl">❓</span>
-                            <span id="testItemName" class="text-[11px] font-bold mt-1 whitespace-nowrap">Item Misteri</span>
-                        </div>
-                    </div>
+      document.getElementById(`phase${phaseNum}`).classList.add('active');
+      document.getElementById(`btn-phase${phaseNum}`).classList.add('active');
 
-                    <!-- Machine Scanner Block (In the middle) -->
-                    <div class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
-                        <div class="bg-emerald-600 border-4 border-emerald-300 p-4 rounded-3xl shadow-2xl text-center min-w-[140px] relative">
-                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                MESIN AI
-                            </div>
-                            <span id="machineScannerIcon" class="text-4xl block my-1">🤖</span>
-                            <span id="machineStatusLabel" class="text-[10px] font-bold text-emerald-100 block">Siap Menyortir</span>
-                        </div>
-                    </div>
+      if (phaseNum === 1) renderSample();
+      if (phaseNum === 2) initTrainingStage();
+      if (phaseNum === 3) initTestingStage();
+    }
 
-                    <!-- Output Chute (Right Side) -->
-                    <div class="ml-auto z-20 text-center bg-slate-800/90 border border-slate-700 p-3 rounded-2xl text-xs">
-                        <span class="text-2xl block mb-1">📥</span>
-                        <span class="text-[10px] text-slate-400 font-bold block">Pintu Keluaran</span>
-                    </div>
-                </div>
+    /* ==========================================================================
+       FASE 1: PENDATAAN SAMPEL
+       ========================================================================== */
+    function renderSample() {
+      const item = dataset[sampleIndex];
+      document.getElementById('sample-icon').innerText = item.icon;
+      document.getElementById('sample-name').innerText = item.name;
+      document.getElementById('sample-attr').innerText = `Warna: ${item.color}`;
+    }
 
-                <!-- Control Buttons -->
-                <div class="flex justify-center gap-3">
-                    <button id="btnStartConveyor" onclick="startConveyorSort()" class="bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold px-6 py-3 rounded-2xl text-sm transition shadow-lg flex items-center gap-2">
-                        <span>▶️ Jalankan Mesin & Sortir Item!</span>
-                    </button>
-                </div>
-            </div>
+    function nextSample() {
+      playSound('click');
+      sampleIndex = (sampleIndex + 1) % dataset.length;
+      renderSample();
+    }
 
-            <!-- Prediction Result & Student Validation Card -->
-            <div id="predictionResultCard" class="bg-white p-6 rounded-3xl border-2 border-emerald-100 shadow-sm hidden space-y-6">
-                
-                <div class="text-center">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Hasil Prediksi Mesin AI</span>
-                    <h3 class="text-xl font-black text-slate-800">Mesin Menyalurkan Item Ke:</h3>
-                </div>
+    function prevSample() {
+      playSound('click');
+      sampleIndex = (sampleIndex - 1 + dataset.length) % dataset.length;
+      renderSample();
+    }
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <!-- Left: Category Result -->
-                    <div class="space-y-3">
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                            <span class="text-xs font-bold text-slate-400 block mb-1">Hasil Prediksi Kategori & Sub-Kategori</span>
-                            <div class="flex justify-between items-center">
-                                <span id="predSubCat" class="text-xl font-black text-emerald-600">BUAH MANIS</span>
-                                <span id="predSubConf" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Keyakinan: 90%</span>
-                            </div>
-                            <div class="w-full bg-slate-200 h-2.5 rounded-full mt-2 overflow-hidden">
-                                <div id="barSubConf" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
-                            </div>
-                        </div>
+    /* ==========================================================================
+       FASE 2: TRAINING GAME (BAN BERJALAN)
+       ========================================================================== */
+    function initTrainingStage() {
+      const container = document.getElementById('training-items-container');
+      container.innerHTML = '';
+      selectedBeltItemId = null;
+      document.getElementById('machine-screen-2').innerText = "PILIH OBJEK DI BAN BERJALAN DAHULU";
 
-                        <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 text-xs text-slate-700 space-y-1">
-                            <span class="font-bold text-emerald-900 block mb-1">💡 Alasan Logika AI:</span>
-                            <p id="predExplanation">AI melihat item ini memiliki ciri-ciri warna dan rasa yang mirip dengan data di Tab 1.</p>
-                        </div>
-                    </div>
+      dataset.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'belt-item';
+        div.id = `belt-item-${item.id}`;
+        div.innerHTML = `
+          <div style="font-size:2rem">${item.icon}</div>
+          <div style="font-size:0.7rem; font-weight:bold; text-align:center">${item.name}</div>
+        `;
+        div.onclick = () => selectBeltItem(item.id);
+        container.appendChild(div);
+      });
+    }
 
-                    <!-- Right: Student Verification Section (Pemeriksaan Siswa) -->
-                    <div class="bg-amber-50/80 p-5 rounded-3xl border-2 border-amber-200 text-center space-y-3">
-                        <span class="text-3xl block">🔍</span>
-                        <h4 class="text-sm font-bold text-amber-900">Pemeriksaan Siswa / Pelatih AI:</h4>
-                        <p class="text-xs text-amber-800">Apakah hasil tebakan Mesin AI di atas sudah **BENAR** sesuai dengan jenis aslinya?</p>
+    function selectBeltItem(id) {
+      playSound('click');
+      selectedBeltItemId = id;
+      document.querySelectorAll('.belt-item').forEach(el => el.classList.remove('selected'));
+      
+      const selectedEl = document.getElementById(`belt-item-${id}`);
+      if (selectedEl) selectedEl.classList.add('selected');
 
-                        <div class="flex justify-center gap-3 pt-2">
-                            <button onclick="verifyResult(true)" class="bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1.5">
-                                <span>✅ Ya, Tebakan Benar!</span>
-                            </button>
-                            <button onclick="verifyResult(false)" class="bg-rose-500 hover:bg-rose-600 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1.5">
-                                <span>❌ Salah! Perlu Dilatih Lagi</span>
-                            </button>
-                        </div>
+      const item = dataset.find(d => d.id === id);
+      document.getElementById('machine-screen-2').innerText = `TERPILIH: ${item.name.toUpperCase()}\nPILIH KATEGORI DI BAWAH!`;
+    }
 
-                        <div id="verificationFeedback" class="hidden text-xs font-bold p-2.5 rounded-xl mt-2 transition-all"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    function classifySelectedItem(assignedCategory) {
+      if (!selectedBeltItemId) {
+        playSound('wrong');
+        alert("Pilih objek di ban berjalan terlebih dahulu!");
+        return;
+      }
 
-    </main>
+      playSound('success');
+      const item = dataset.find(d => d.id === selectedBeltItemId);
+      
+      // Save trained data
+      trainedData.push({ ...item, userAssignedCategory: assignedCategory });
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-400">
-        <p>Proyek Edukasi AI Anak • BBGTK DIY & Si Yo • Built for GitHub Pages</p>
-    </footer>
+      // Move visual badge to basket
+      const basket = document.getElementById(`basket-${assignedCategory}`);
+      if (basket) {
+        const badge = document.createElement('span');
+        badge.className = 'basket-item-badge';
+        badge.innerText = item.icon;
+        badge.title = item.name;
+        basket.appendChild(badge);
+      }
 
-    <script>
-        // ==========================================
-        // 0. WEB AUDIO API SYNTHESIZER (EFEK SUARA)
-        // ==========================================
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
+      // Hide item from belt
+      const itemEl = document.getElementById(`belt-item-${selectedBeltItemId}`);
+      if (itemEl) itemEl.style.display = 'none';
 
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
+      selectedBeltItemId = null;
+      document.getElementById('machine-screen-2').innerText = "BERHASIL DISORTIR!\nPILIH OBJEK LAINNYA.";
+    }
+
+    /* ==========================================================================
+       FASE 3: UJI MESIN & EVALUASI SISWA
+       ========================================================================== */
+    function initTestingStage() {
+      document.getElementById('machine-screen-3').innerText = "KLIK 'JALANKAN SORTIR' UNTUK MEMULAI";
+      document.getElementById('verify-panel').style.style = 'none';
+      document.getElementById('verify-panel').style.display = 'none';
+      prepareTestItem();
+    }
+
+    function prepareTestItem() {
+      const container = document.getElementById('test-items-container');
+      container.innerHTML = '';
+
+      // Pick random item from dataset
+      currentTestItem = dataset[Math.floor(Math.random() * dataset.length)];
+
+      const div = document.createElement('div');
+      div.className = 'belt-item selected';
+      div.innerHTML = `
+        <div style="font-size:2.5rem">${currentTestItem.icon}</div>
+        <div style="font-size:0.75rem; font-weight:bold">${currentTestItem.name}</div>
+      `;
+      container.appendChild(div);
+    }
+
+    function runAutoSort() {
+      playSound('click');
+      if (!currentTestItem) return;
+
+      const screen = document.getElementById('machine-screen-3');
+      screen.innerText = "MEMPROSES ATRIBUT...\nMENGHITUNG POLA...";
+
+      setTimeout(() => {
+        // Simple prediction simulation based on dataset or trained data
+        let predictedCategory = currentTestItem.category;
+
+        // If user heavily misclassified in training, reflect that error (Garbage In, Garbage Out)
+        const misclassifications = trainedData.filter(t => t.id === currentTestItem.id && t.userAssignedCategory !== currentTestItem.category);
+        if (misclassifications.length > 0) {
+          predictedCategory = misclassifications[misclassifications.length - 1].userAssignedCategory;
         }
 
-        // Suara Klik / Interaksi Umum
-        function playSoundClick() {
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch (e) {}
-        }
-
-        // Suara Sukses Menyortir / Tebakan Benar (Chime Ceria)
-        function playSoundSuccess() {
-            try {
-                initAudio();
-                const now = audioCtx.currentTime;
-                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-                notes.forEach((freq, index) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + index * 0.08);
-                    gain.gain.setValueAtTime(0.15, now + index * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.08 + 0.25);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(now + index * 0.08);
-                    osc.stop(now + index * 0.08 + 0.25);
-                });
-            } catch (e) {}
-        }
-
-        // Suara Peringatan / Salah / Belum Dilatih (Buzzer Rendah)
-        function playSoundError() {
-            try {
-                initAudio();
-                const now = audioCtx.currentTime;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.setValueAtTime(130, now + 0.15);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } catch (e) {}
-        }
-
-        // Suara Mesin Conveyor Berjalan
-        function playSoundMachineEngine() {
-            try {
-                initAudio();
-                const now = audioCtx.currentTime;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(80, now);
-                osc.frequency.linearRampToValueAtTime(120, now + 1.5);
-                osc.frequency.linearRampToValueAtTime(70, now + 3.0);
-                gain.gain.setValueAtTime(0.05, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 3.0);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 3.0);
-            } catch (e) {}
-        }
-
-        // ==========================================
-        // 1. DATA MASTER ITEMS (DATASET)
-        // ==========================================
-        const masterItems = [
-            // BUAH MANIS
-            { id: 'pisang', nama: 'Pisang', emoji: '🍌', kategori: 'buah', subKategori: 'manis', fitur: { warna: 'kuning', tumbuh: 'pohon', rasa: 'manis' } },
-            { id: 'apel', nama: 'Apel Merah', emoji: '🍎', kategori: 'buah', subKategori: 'manis', fitur: { warna: 'merah', tumbuh: 'pohon', rasa: 'manis' } },
-            { id: 'mangga', nama: 'Mangga', emoji: '🥭', kategori: 'buah', subKategori: 'manis', fitur: { warna: 'kuning', tumbuh: 'pohon', rasa: 'manis' } },
-            { id: 'semangka', nama: 'Semangka', emoji: '🍉', kategori: 'buah', subKategori: 'manis', fitur: { warna: 'hijau', tumbuh: 'merambat', rasa: 'manis' } },
-
-            // BUAH ASAM
-            { id: 'lemon', nama: 'Lemon', emoji: '🍋', kategori: 'buah', subKategori: 'asam', fitur: { warna: 'kuning', tumbuh: 'pohon', rasa: 'asam' } },
-            { id: 'jeruk_nipis', nama: 'Jeruk Nipis', emoji: '🟢', kategori: 'buah', subKategori: 'asam', fitur: { warna: 'hijau', tumbuh: 'pohon', rasa: 'asam' } },
-            { id: 'stroberi', nama: 'Stroberi', emoji: '🍓', kategori: 'buah', subKategori: 'asam', fitur: { warna: 'merah', tumbuh: 'tanah', rasa: 'asam' } },
-
-            // SAYUR DAUN
-            { id: 'bayam', nama: 'Bayam', emoji: '🥬', kategori: 'sayur', subKategori: 'daun', fitur: { warna: 'hijau', tumbuh: 'batang', rasa: 'tawar' } },
-            { id: 'sawi', nama: 'Sawi Hijau', emoji: '🥗', kategori: 'sayur', subKategori: 'daun', fitur: { warna: 'hijau', tumbuh: 'batang', rasa: 'tawar' } },
-            { id: 'brokoli', nama: 'Brokoli', emoji: '🥦', kategori: 'sayur', subKategori: 'daun', fitur: { warna: 'hijau', tumbuh: 'batang', rasa: 'tawar' } },
-
-            // SAYUR UMBI
-            { id: 'wortel', nama: 'Wortel', emoji: '🥕', kategori: 'sayur', subKategori: 'umbi', fitur: { warna: 'oranye', tumbuh: 'dalam_tanah', rasa: 'gurih' } },
-            { id: 'kentang', nama: 'Kentang', emoji: '🥔', kategori: 'sayur', subKategori: 'umbi', fitur: { warna: 'cokelat', tumbuh: 'dalam_tanah', rasa: 'gurih' } },
-            { id: 'jagung', nama: 'Jagung', emoji: '🌽', kategori: 'sayur', subKategori: 'umbi', fitur: { warna: 'kuning', tumbuh: 'batang', rasa: 'manis' } }
-        ];
-
-        // ==========================================
-        // 2. GLOBAL STATE
-        // ==========================================
-        let unassignedQueue = [...masterItems];
-        let trainingDataset = {
-            'buah-manis': [],
-            'buah-asam': [],
-            'sayur-daun': [],
-            'sayur-umbi': []
-        };
-        
-        let aiModel = {
-            isTrained: false,
-            totalSamples: 0,
-            featureWeights: {}
-        };
-
-        let activeQueueItem = null;
-        let currentTestItem = null;
-        let isConveyorRunning = false;
-
-        // ==========================================
-        // 3. TAB NAVIGATION SYSTEM
-        // ==========================================
-        function switchTab(tabId) {
-            playSoundClick();
-            ['tab1', 'tab2', 'tab3'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(tabId).classList.remove('hidden');
-
-            // Button highlights
-            ['btnTab1', 'btnTab2', 'btnTab3'].forEach(btn => {
-                document.getElementById(btn).classList.remove('active');
-                document.getElementById(btn).classList.add('text-emerald-800');
-            });
-
-            const activeBtn = tabId === 'tab1' ? 'btnTab1' : (tabId === 'tab2' ? 'btnTab2' : 'btnTab3');
-            document.getElementById(activeBtn).classList.add('active');
-            document.getElementById(activeBtn).classList.remove('text-emerald-800');
-
-            if (tabId === 'tab2') {
-                updateTrainingSummaryView();
-            } else if (tabId === 'tab3') {
-                if (!currentTestItem) prepareNewTestItem();
-            }
-        }
-
-        // ==========================================
-        // 4. TAB 1: DATA INPUT & LABELING
-        // ==========================================
-        function renderTab1() {
-            // Render Active Sorting Card
-            const cardContainer = document.getElementById('activeCardContainer');
-            if (unassignedQueue.length > 0) {
-                activeQueueItem = unassignedQueue[0];
-                cardContainer.innerHTML = `
-                    <div id="draggableCard" draggable="true" ondragstart="handleDragStart(event)" 
-                        class="w-full bg-amber-50 border-2 border-amber-200 rounded-3xl p-5 shadow-md text-center cursor-grab active:cursor-grabbing transition-transform hover:scale-105">
-                        <div class="text-6xl mb-2 bounce-gentle">${activeQueueItem.emoji}</div>
-                        <h4 class="text-xl font-black text-slate-800">${activeQueueItem.nama}</h4>
-                        
-                        <!-- Visible Visual Features -->
-                        <div class="mt-4 bg-white p-3 rounded-2xl border border-amber-100 text-left space-y-1.5 text-xs">
-                            <span class="font-bold text-slate-400 block mb-1 text-[10px] uppercase tracking-wider">Ciri-Ciri (Features):</span>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Warna:</span>
-                                <span class="font-bold capitalize bg-slate-100 px-2 py-0.5 rounded text-slate-700">${activeQueueItem.fitur.warna}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Tempat Tumbuh:</span>
-                                <span class="font-bold capitalize bg-slate-100 px-2 py-0.5 rounded text-slate-700">${activeQueueItem.fitur.tumbuh.replace('_', ' ')}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Rasa Dominan:</span>
-                                <span class="font-bold capitalize bg-slate-100 px-2 py-0.5 rounded text-slate-700">${activeQueueItem.fitur.rasa}</span>
-                            </div>
-                        </div>
-
-                        <p class="text-[10px] text-amber-700 font-bold mt-3">👉 Drag kartu ini ke keranjang atau klik tombol di bawah keranjang</p>
-                    </div>
-                `;
-            } else {
-                activeQueueItem = null;
-                cardContainer.innerHTML = `
-                    <div class="w-full bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-6 text-center">
-                        <span class="text-5xl block mb-2">🎉</span>
-                        <h4 class="text-base font-bold text-emerald-800">Semua Data Telah Disortir!</h4>
-                        <p class="text-xs text-emerald-600 mt-1">Bagus sekali! Sekarang kamu bersama <b>Si Yo</b> bisa lanjut ke <b>Tab 2 (Proses Belajar)</b> untuk melatih AI.</p>
-                        <button onclick="switchTab('tab2')" class="mt-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">
-                            Ke Tab 2: Latih AI ➔
-                        </button>
-                    </div>
-                `;
-            }
-
-            // Render Queue List Preview
-            const queueList = document.getElementById('queueList');
-            queueList.innerHTML = '';
-            unassignedQueue.slice(1).forEach(item => {
-                queueList.innerHTML += `
-                    <div class="bg-slate-100 border border-slate-200 p-2 rounded-2xl flex-shrink-0 text-xl shadow-xs" title="${item.nama}">
-                        ${item.emoji}
-                    </div>
-                `;
-            });
-
-            // Update Basket Displays & Counters
-            ['buah-manis', 'buah-asam', 'sayur-daun', 'sayur-umbi'].forEach(key => {
-                const countEl = document.getElementById(`count-${key}`);
-                const itemsContainer = document.getElementById(`items-${key}`);
-                const list = trainingDataset[key];
-
-                countEl.innerText = `${list.length} Item`;
-                itemsContainer.innerHTML = '';
-
-                list.forEach(item => {
-                    itemsContainer.innerHTML += `
-                        <span class="bg-white px-2 py-1 rounded-xl text-xs shadow-xs border border-slate-200 flex items-center gap-1" title="${item.nama}">
-                            <span>${item.emoji}</span>
-                            <span class="font-bold text-[10px]">${item.nama}</span>
-                        </span>
-                    `;
-                });
-            });
-
-            updateGlobalBadge();
-        }
-
-        function handleDragStart(e) {
-            e.dataTransfer.setData("text/plain", JSON.stringify(activeQueueItem));
-        }
-
-        function allowDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drag-over');
-        }
-
-        function removeDragOver(containerId) {
-            document.getElementById(containerId).classList.remove('drag-over');
-        }
-
-        function handleDrop(e, mainCat, subCat) {
-            e.preventDefault();
-            const containerId = `basket-${mainCat}-${subCat}`;
-            removeDragOver(containerId);
-            sortActiveItem(mainCat, subCat);
-        }
-
-        function sortActiveItem(mainCat, subCat) {
-            if (!activeQueueItem) return;
-
-            playSoundClick();
-            const key = `${mainCat}-${subCat}`;
-            trainingDataset[key].push(activeQueueItem);
-            
-            unassignedQueue.shift();
-            aiModel.isTrained = false;
-            renderTab1();
-        }
-
-        function autoFillData() {
-            playSoundClick();
-            clearAllData();
-            masterItems.forEach(item => {
-                const key = `${item.kategori}-${item.subKategori}`;
-                trainingDataset[key].push(item);
-            });
-            unassignedQueue = [];
-            aiModel.isTrained = false;
-            renderTab1();
-        }
-
-        function clearAllData() {
-            playSoundClick();
-            unassignedQueue = [...masterItems];
-            trainingDataset = {
-                'buah-manis': [],
-                'buah-asam': [],
-                'sayur-daun': [],
-                'sayur-umbi': []
-            };
-            aiModel.isTrained = false;
-            renderTab1();
-        }
-
-        // ==========================================
-        // 5. TAB 2: TRAINING PROCESS & BRAIN
-        // ==========================================
-        function getTotalDataCount() {
-            return Object.values(trainingDataset).reduce((acc, list) => acc + list.length, 0);
-        }
-
-        function updateTrainingSummaryView() {
-            const total = getTotalDataCount();
-            document.getElementById('summaryTotalSample').innerText = `${total} Items`;
-
-            if (total === 0) {
-                document.getElementById('summaryColors').innerText = '-';
-                document.getElementById('summaryTastes').innerText = '-';
-                return;
-            }
-
-            const allItems = Object.values(trainingDataset).flat();
-            const colors = [...new Set(allItems.map(i => i.fitur.warna))];
-            const tastes = [...new Set(allItems.map(i => i.fitur.rasa))];
-
-            document.getElementById('summaryColors').innerText = colors.join(', ');
-            document.getElementById('summaryTastes').innerText = tastes.join(', ');
-        }
-
-        function runTrainingProcess() {
-            const total = getTotalDataCount();
-            if (total === 0) {
-                playSoundError();
-                alert("Harap masukkan setidaknya beberapa data buah/sayur di Tab 1 terlebih dahulu!");
-                return;
-            }
-
-            playSoundClick();
-            const btn = document.getElementById('startTrainBtn');
-            const brainIcon = document.getElementById('brainStatusIcon');
-            const brainText = document.getElementById('brainStatusText');
-            const progressBar = document.getElementById('trainingProgressBar');
-
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            brainIcon.classList.add('gear-spin');
-            brainText.innerText = "Sedang Menghitung Pola Data...";
-            progressBar.style.width = '0%';
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 20;
-                progressBar.style.width = `${progress}%`;
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    brainIcon.classList.remove('gear-spin');
-                    brainText.innerText = "✨ AI Selesai Dilatih!";
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50');
-
-                    calculateModelWeights();
-                    aiModel.isTrained = true;
-                    aiModel.totalSamples = total;
-
-                    playSoundSuccess();
-                    updateGlobalBadge();
-                }
-            }, 300);
-        }
-
-        function calculateModelWeights() {
-            const allItems = Object.values(trainingDataset).flat();
-            const total = allItems.length;
-
-            if (total === 0) return;
-
-            const greenCount = trainingDataset['sayur-daun'].filter(i => i.fitur.warna === 'hijau').length;
-            const greenWeight = Math.round((greenCount / (trainingDataset['sayur-daun'].length || 1)) * 100);
-
-            const sweetCount = trainingDataset['buah-manis'].filter(i => i.fitur.rasa === 'manis').length;
-            const sweetWeight = Math.round((sweetCount / (trainingDataset['buah-manis'].length || 1)) * 100);
-
-            const soilCount = trainingDataset['sayur-umbi'].filter(i => i.fitur.tumbuh === 'dalam_tanah').length;
-            const soilWeight = Math.round((soilCount / (trainingDataset['sayur-umbi'].length || 1)) * 100);
-
-            document.getElementById('weightGreen').innerText = `${greenWeight}%`;
-            document.getElementById('barWeightGreen').style.width = `${greenWeight}%`;
-
-            document.getElementById('weightSweet').innerText = `${sweetWeight}%`;
-            document.getElementById('barWeightSweet').style.width = `${sweetWeight}%`;
-
-            document.getElementById('weightSoil').innerText = `${soilWeight}%`;
-            document.getElementById('barWeightSoil').style.width = `${soilWeight}%`;
-        }
-
-        // ==========================================
-        // 6. TAB 3: CONVEYOR BELT SIMULATOR & PREDICTION
-        // ==========================================
-        function prepareNewTestItem() {
-            const randomIndex = Math.floor(Math.random() * masterItems.length);
-            currentTestItem = masterItems[randomIndex];
-
-            document.getElementById('testItemEmoji').innerText = currentTestItem.emoji;
-            document.getElementById('testItemName').innerText = currentTestItem.nama;
-
-            // Reset Item Position to Left
-            const container = document.getElementById('movingItemContainer');
-            container.className = "absolute top-1/2 -translate-y-1/2 -left-32 z-10";
-
-            document.getElementById('predictionResultCard').classList.add('hidden');
-            document.getElementById('verificationFeedback').classList.add('hidden');
-        }
-
-        function startConveyorSort() {
-            if (!aiModel.isTrained) {
-                playSoundError();
-                alert("AI belum dilatih! Harap pergi ke Tab 2 dan klik 'Mulai Latih AI' terlebih dahulu.");
-                return;
-            }
-
-            if (isConveyorRunning) return;
-            isConveyorRunning = true;
-
-            playSoundClick();
-            playSoundMachineEngine();
-
-            prepareNewTestItem();
-
-            const belt = document.getElementById('conveyorBeltGraphic');
-            const item = document.getElementById('movingItemContainer');
-            const btn = document.getElementById('btnStartConveyor');
-            const scannerIcon = document.getElementById('brainStatusIcon');
-            const machineStatusLabel = document.getElementById('machineStatusLabel');
-
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            belt.classList.add('conveyor-running');
-            machineStatusLabel.innerText = "Scanning Data...";
-
-            // Start Item Movement Animation across belt
-            item.classList.add('item-moving');
-
-            // Midpoint: Machine Scanning Effect (at 1.5 seconds)
-            setTimeout(() => {
-                machineStatusLabel.innerText = "Menganalisis Ciri...";
-            }, 1500);
-
-            // Finish Movement (at 3 seconds)
-            setTimeout(() => {
-                belt.classList.remove('conveyor-running');
-                item.classList.remove('item-moving');
-                machineStatusLabel.innerText = "Selesai Disortir!";
-                
-                isConveyorRunning = false;
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
-
-                // Execute Prediction Engine
-                executePredictionEngine();
-            }, 3000);
-        }
-
-        function executePredictionEngine() {
-            if (!currentTestItem) return;
-
-            let scores = {
-                'buah-manis': 0,
-                'buah-asam': 0,
-                'sayur-daun': 0,
-                'sayur-umbi': 0
-            };
-
-            Object.keys(trainingDataset).forEach(key => {
-                const samples = trainingDataset[key];
-                samples.forEach(sample => {
-                    let matchPoints = 0;
-                    if (sample.fitur.warna === currentTestItem.fitur.warna) matchPoints += 1;
-                    if (sample.fitur.tumbuh === currentTestItem.fitur.tumbuh) matchPoints += 1;
-                    if (sample.fitur.rasa === currentTestItem.fitur.rasa) matchPoints += 1;
-
-                    scores[key] += matchPoints;
-                });
-            });
-
-            let bestKey = 'buah-manis';
-            let maxScore = -1;
-
-            Object.keys(scores).forEach(key => {
-                if (scores[key] > maxScore) {
-                    maxScore = scores[key];
-                    bestKey = key;
-                }
-            });
-
-            const maxPossibleScoreForBest = (trainingDataset[bestKey].length || 1) * 3;
-            let subConfidence = Math.min(99, Math.max(55, Math.round((maxScore / maxPossibleScoreForBest) * 100)));
-            if (isNaN(subConfidence)) subConfidence = 60;
-
-            const [predictedMainCat, predictedSubCat] = bestKey.split('-');
-
-            const subLabelMap = {
-                'manis': 'BUAH - MANIS',
-                'asam': 'BUAH - ASAM / SEGAR',
-                'daun': 'SAYUR - DAUN',
-                'umbi': 'SAYUR - UMBI / BIJI'
-            };
-
-            document.getElementById('predSubCat').innerText = subLabelMap[predictedSubCat];
-            document.getElementById('predSubConf').innerText = `Keyakinan AI: ${subConfidence}%`;
-            document.getElementById('barSubConf').style.width = `${subConfidence}%`;
-
-            document.getElementById('predExplanation').innerText = 
-                `AI memprediksi ${currentTestItem.nama} masuk ke "${subLabelMap[predictedSubCat]}" karena warna (${currentTestItem.fitur.warna}) & rasa (${currentTestItem.fitur.rasa}) paling cocok dengan ${trainingDataset[bestKey].length} data yang kamu latih.`;
-
-            document.getElementById('predictionResultCard').classList.remove('hidden');
-
-            // Sound Audio Effect saat prediksi selesai dibuat
-            playSoundSuccess();
-
-            // Counter
-            const counterEl = document.getElementById('testItemCounter');
-            counterEl.innerText = parseInt(counterEl.innerText) + 1;
-        }
-
-        // Verification function for student checks
-        function verifyResult(isCorrect) {
-            const feedback = document.getElementById('verificationFeedback');
-            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
-
-            if (isCorrect) {
-                playSoundSuccess();
-                feedback.classList.add('bg-emerald-100', 'text-emerald-800');
-                feedback.innerHTML = "🎉 Hebat! Latihan data yang kamu berikan ke AI sudah tepat!";
-            } else {
-                playSoundError();
-                feedback.classList.add('bg-rose-100', 'text-rose-800');
-                feedback.innerHTML = "💡 Ingat prinsip 'Garbage In, Garbage Out'! Coba periksa kembali data di Tab 1 lalu latih ulang di Tab 2.";
-            }
-        }
-
-        function resetAIMemory() {
-            playSoundClick();
-            if (confirm("Apakah kamu yakin ingin menghapus memori AI dan memulai dari nol?")) {
-                clearAllData();
-                switchTab('tab1');
-            }
-        }
-
-        function updateGlobalBadge() {
-            const badge = document.getElementById('aiStatusBadge');
-            const total = getTotalDataCount();
-
-            if (aiModel.isTrained) {
-                badge.className = "bg-emerald-800 px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-emerald-400";
-                badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-300"></span><span>Status AI: Siap Menguji (${total} Data)</span>`;
-            } else if (total > 0) {
-                badge.className = "bg-amber-700 px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-amber-400";
-                badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-300 animate-pulse"></span><span>Status AI: Perlu Dilatih di Tab 2 (${total} Data)</span>`;
-            } else {
-                badge.className = "bg-slate-700 px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-slate-500";
-                badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span><span>Status AI: Belum Ada Data (0)</span>`;
-            }
-        }
-
-        // Initialize on Load
-        window.onload = function() {
-            renderTab1();
-        };
-    </script>
+        playSound('success');
+        screen.innerText = `PREDIKSI: ${predictedCategory.replace('_', ' ').toUpperCase()}\nKEYAKINAN: 88%`;
+
+        // Add to output basket
+        const outputBasket = document.getElementById('test-output-basket');
+        const badge = document.createElement('span');
+        badge.className = 'basket-item-badge';
+        badge.innerText = currentTestItem.icon;
+        outputBasket.appendChild(badge);
+
+        // Show student verification panel
+        document.getElementById('verify-panel').style.display = 'flex';
+      }, 1000);
+    }
+
+    function verifyResult(isCorrect) {
+      if (isCorrect) {
+        playSound('success');
+        alert("Hebat! AI berhasil memprediksi dengan benar.");
+      } else {
+        playSound('wrong');
+        alert("Terima kasih! Evaluasimu membantu kita tahu bahwa AI perlu diberi lebih banyak data latih yang akurat.");
+      }
+
+      document.getElementById('verify-panel').style.display = 'none';
+      prepareTestItem();
+      document.getElementById('machine-screen-3').innerText = "SIAP UNTUK ITEM BERIKUTNYA";
+    }
+
+    // Initialize first view
+    renderSample();
+  </script>
 </body>
 </html>
