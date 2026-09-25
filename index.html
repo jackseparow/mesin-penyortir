@@ -278,15 +278,8 @@
       align-items: center;
     }
 
-    /* Track Ban Berjalan dari Kiri ke Mesin */
-    .conveyor-left-zone {
-      position: relative;
-      height: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .conveyor-belt-track {
+    /* Track Ban Berjalan yang Menembus Mesin */
+    .conveyor-belt-full-track {
       position: absolute;
       bottom: 40px;
       left: 0;
@@ -300,11 +293,20 @@
         #37474f 40px
       );
       animation: moveBelt 2s linear infinite;
+      z-index: 1;
     }
 
     @keyframes moveBelt {
       from { background-position: 0 0; }
       to { background-position: 40px 0; }
+    }
+
+    /* Zone Kiri dan Kanan */
+    .conveyor-zone {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
     }
 
     /* Objek Berjalan */
@@ -345,7 +347,22 @@
       z-index: 10;
       border: 4px solid #546e7a;
       justify-self: center;
+      position: relative;
     }
+
+    /* Terowongan Masuk/Keluar Mesin */
+    .machine-center-body::before, .machine-center-body::after {
+      content: '';
+      position: absolute;
+      bottom: 20px;
+      width: 20px;
+      height: 60px;
+      background: #111;
+      border-radius: 4px;
+    }
+
+    .machine-center-body::before { left: -10px; }
+    .machine-center-body::after { right: -10px; }
 
     .machine-screen-display {
       background: #000;
@@ -356,10 +373,19 @@
       color: #00e676;
       text-align: center;
       font-family: 'Courier New', Courier, monospace;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .machine-screen-display.error-mode {
+      border-color: #ff5252;
+      color: #ff5252;
     }
 
     .category-target-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: bold;
       color: #ffeb3b;
       margin-bottom: 4px;
@@ -385,10 +411,11 @@
     .output-baskets-right {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       max-height: 380px;
       overflow-y: auto;
       padding-right: 6px;
+      z-index: 10;
     }
 
     .output-basket-box {
@@ -397,6 +424,13 @@
       border-radius: 10px;
       padding: 8px 12px;
       min-height: 60px;
+      transition: all 0.3s ease;
+    }
+
+    .output-basket-box.highlight {
+      transform: scale(1.03);
+      border-color: #00e676;
+      box-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
     }
 
     .output-basket-title {
@@ -533,11 +567,10 @@
       </div>
 
       <div class="conveyor-stage-layout" id="conveyor-area-2">
+        <div class="conveyor-belt-full-track"></div>
+
         <!-- Area Kiri: Ban Berjalan Input -->
-        <div class="conveyor-left-zone" id="conveyor-left-zone">
-          <div class="conveyor-belt-track"></div>
-          <!-- Moving items injected via JS -->
-        </div>
+        <div class="conveyor-zone" id="conveyor-left-zone"></div>
 
         <!-- Body Mesin AI di Tengah Layar -->
         <div class="machine-center-body">
@@ -581,33 +614,56 @@
       </div>
     </section>
 
-    <!-- FASE 3: UJI HASIL PREDIKSI MESIN -->
+    <!-- FASE 3: UJI HASIL MESIN (ANIMASI MENGALIR KE MESIN & KERANJANG) -->
     <section id="phase3" class="phase-panel">
       <div class="instruction-box">
-        <strong>Tahap 3: Pengujian Otomatis Mesin AI.</strong> Lihat bagaimana Mesin AI memprediksi objek baru berdasarkan data latih yang kamu berikan sebelumnya!
+        <div>
+          <strong>Tahap 3: Pengujian Mesin Otomatis.</strong> Benda mengalir dari kiri, masuk ke mesin, dan disortir otomatis ke keranjang kanan berdasarkan data latihmu!
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="action-btn" id="btn-toggle-auto" onclick="toggleAutoConveyor()">▶️ Jalankan Ban Berjalan</button>
+        </div>
       </div>
 
-      <div class="conveyor-stage-layout" id="conveyor-area-3">
-        <!-- Area Kiri: Test Item -->
-        <div class="conveyor-left-zone" id="test-left-zone">
-          <div class="conveyor-belt-track"></div>
-          <!-- Single test item -->
-        </div>
+      <div class="conveyor-stage-layout" id="conveyor-area-3" style="position:relative;">
+        <div class="conveyor-belt-full-track"></div>
+
+        <!-- Container animasi pergerakan item lintas layar -->
+        <div id="phase3-moving-container" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
+
+        <!-- Space Kosong Kiri -->
+        <div class="conveyor-zone"></div>
 
         <!-- Body Mesin AI di Tengah -->
         <div class="machine-center-body">
           <div style="font-size:0.85rem; font-weight:bold; color:#b0bec5;">UJI OTOMATIS AI</div>
           <div class="machine-screen-display" id="machine-screen-test">
-            MENUNGGU ITEM...
+            MESIN SIAP...
           </div>
-          <button class="action-btn" onclick="runAutoTest()" id="btn-run-test">Jalankan Sortir AI</button>
+          <div style="font-size:0.7rem; color:#ddd; text-align:center;">AI memproses benda sesuai data latih yang diberikan.</div>
         </div>
 
-        <!-- Area Kanan: Output Sortir AI -->
+        <!-- Area Kanan: Keranjang Hasil Penyortiran AI -->
         <div class="output-baskets-right">
-          <div class="output-basket-box" style="min-height:150px;">
-            <div class="output-basket-title">📦 Hasil Penyortiran AI</div>
-            <div class="output-basket-items" id="test-output-basket"></div>
+          <div class="output-basket-box" id="fase3-box-buah_manis">
+            <div class="output-basket-title">🍎 Buah Manis</div>
+            <div class="output-basket-items" id="basket-fase3-buah_manis"></div>
+          </div>
+          <div class="output-basket-box" id="fase3-box-buah_asam">
+            <div class="output-basket-title">🍋 Buah Asam / Segar</div>
+            <div class="output-basket-items" id="basket-fase3-buah_asam"></div>
+          </div>
+          <div class="output-basket-box" id="fase3-box-sayur_daun">
+            <div class="output-basket-title">🥬 Sayur Daun</div>
+            <div class="output-basket-items" id="basket-fase3-sayur_daun"></div>
+          </div>
+          <div class="output-basket-box" id="fase3-box-sayur_umbi">
+            <div class="output-basket-title">🥕 Sayur Umbi</div>
+            <div class="output-basket-items" id="basket-fase3-sayur_umbi"></div>
+          </div>
+          <div class="output-basket-box" id="fase3-box-bukan_makanan">
+            <div class="output-basket-title">👟 Bukan Makanan</div>
+            <div class="output-basket-items" id="basket-fase3-bukan_makanan"></div>
           </div>
         </div>
       </div>
@@ -662,8 +718,9 @@
     let currentCategoryIndex = 0;
     let timerValue = 30;
     let timerInterval = null;
-    let userTrainedData = []; // Menyimpan data latih pilihan anak (termasuk jika anak salah memasukkan!)
-    let currentTestItem = null;
+    let userTrainedData = []; // Menyimpan masukan data latih dari siswa
+    let isAutoRunning = false;
+    let autoInterval = null;
 
     /* WEB AUDIO API SYNTHESIZER */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -685,9 +742,9 @@
         osc.start(); osc.stop(audioCtx.currentTime + 0.2);
       } else if (type === 'wrong') {
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(160, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.25);
       }
     }
 
@@ -699,6 +756,8 @@
 
       document.getElementById(`phase${phaseNum}`).classList.add('active');
       document.getElementById(`btn-phase${phaseNum}`).classList.add('active');
+
+      stopAutoConveyor();
 
       if (phaseNum === 1) renderSampleFase1();
       if (phaseNum === 2) startFase2Conveyor();
@@ -745,7 +804,7 @@
       playSound('success');
       const item = dataset[currentIndex];
 
-      // Catat data latih berdasarkan pilihan siswa (meskipun salah!)
+      // Catat data latih berdasarkan masukan anak (walaupun anak salah mengelompokkan!)
       userTrainedData.push({ ...item, userAssignedCategory: chosenCategory });
 
       // Visualisasi badge di keranjang
@@ -774,7 +833,7 @@
     function startFase2Conveyor() {
       currentCategoryIndex = 0;
       updateTargetCategoryDisplay();
-      spawnMovingItems();
+      spawnMovingItemsFase2();
       resetTimer();
     }
 
@@ -802,7 +861,7 @@
       }, 1000);
     }
 
-    function spawnMovingItems() {
+    function spawnMovingItemsFase2() {
       const zone = document.getElementById('conveyor-left-zone');
       
       setInterval(() => {
@@ -821,7 +880,6 @@
           pos += 2;
           el.style.left = pos + 'px';
 
-          // Jika mendekati mesin (kanan zone)
           if (pos > zone.clientWidth - 40) {
             clearInterval(moveAnim);
             el.remove();
@@ -831,10 +889,8 @@
         el.onclick = () => {
           const activeCategory = categoriesList[currentCategoryIndex];
           
-          // Masukkan ke data latih tambahan
           userTrainedData.push({ ...randomItem, userAssignedCategory: activeCategory });
 
-          // Tambahkan ke keranjang hasil kanan
           const rightBasket = document.getElementById(`basket-fase2-${activeCategory}`);
           if (rightBasket) {
             const badge = document.createElement('span');
@@ -851,54 +907,118 @@
       }, 3000);
     }
 
-    /* FASE 3: UJI PREDIKSI AI (BERDASARKAN DATA LATIH SISWA) */
+    /* FASE 3: UJI HASIL MESIN (ANIMASI MENGALIR KE MESIN & MASUK KERANJANG) */
     function initTestingStage() {
-      document.getElementById('machine-screen-test').innerText = "KLIK 'JALANKAN SORTIR' UNTUK MENGUJI AI";
-      prepareTestItem();
+      const screen = document.getElementById('machine-screen-test');
+      screen.classList.remove('error-mode');
+      screen.innerText = "TEKAN 'JALANKAN BAN BERJALAN'";
     }
 
-    function prepareTestItem() {
-      const zone = document.getElementById('test-left-zone');
-      zone.innerHTML = '<div class="conveyor-belt-track"></div>';
+    function toggleAutoConveyor() {
+      if (isAutoRunning) {
+        stopAutoConveyor();
+      } else {
+        startAutoConveyor();
+      }
+    }
 
-      currentTestItem = dataset[Math.floor(Math.random() * dataset.length)];
+    function startAutoConveyor() {
+      isAutoRunning = true;
+      document.getElementById('btn-toggle-auto').innerText = "⏸️ Hentikan Ban Berjalan";
+      document.getElementById('machine-screen-test').innerText = "BAN BERJALAN AKTIF...\nMENGANALISIS ITEM";
+
+      // Spawn item setiap 4.5 detik
+      spawnTestItemAnim();
+      autoInterval = setInterval(spawnTestItemAnim, 4500);
+    }
+
+    function stopAutoConveyor() {
+      isAutoRunning = false;
+      clearInterval(autoInterval);
+      const btn = document.getElementById('btn-toggle-auto');
+      if (btn) btn.innerText = "▶️ Jalankan Ban Berjalan";
+    }
+
+    function spawnTestItemAnim() {
+      if (!document.getElementById('phase3').classList.contains('active')) return;
+
+      const container = document.getElementById('phase3-moving-container');
+      const testItem = dataset[Math.floor(Math.random() * dataset.length)];
 
       const el = document.createElement('div');
       el.className = 'moving-item';
-      el.style.left = '40%';
-      el.innerHTML = `<div style="font-size:2.5rem">${currentTestItem.icon}</div><div style="font-size:0.75rem; font-weight:bold;">${currentTestItem.name}</div>`;
-      zone.appendChild(el);
-    }
-
-    function runAutoTest() {
-      playSound('click');
-      if (!currentTestItem) return;
+      el.innerHTML = `<div style="font-size:2.2rem">${testItem.icon}</div><div style="font-size:0.65rem; font-weight:bold; text-align:center;">${testItem.name}</div>`;
+      
+      let posX = -80;
+      el.style.left = posX + 'px';
+      container.appendChild(el);
 
       const screen = document.getElementById('machine-screen-test');
-      screen.innerText = "MENGANALISIS ATRIBUT...\nMENCARI POLA...";
+      let predictedCategory = testItem.defaultCategory;
 
-      setTimeout(() => {
-        let predictedCategory = currentTestItem.defaultCategory;
+      // PREDIKSI BERDASARKAN DATA LATIH SISWA (Garbage In, Garbage Out)
+      const trainedMatch = userTrainedData.filter(t => t.id === testItem.id);
+      if (trainedMatch.length > 0) {
+        predictedCategory = trainedMatch[trainedMatch.length - 1].userAssignedCategory;
+      }
 
-        // CEK MODEL AI: Jika siswa pernah melatih item ini dengan kategori tertentu (meskipun salah), AI akan menirunya!
-        const matchTrained = userTrainedData.filter(t => t.id === currentTestItem.id);
-        if (matchTrained.length > 0) {
-          // Ambil masukan terakhir dari siswa
-          predictedCategory = matchTrained[matchTrained.length - 1].userAssignedCategory;
+      const isFactualError = (predictedCategory !== testItem.defaultCategory);
+
+      // Animation loop
+      const moveInterval = setInterval(() => {
+        posX += 3;
+        el.style.left = posX + 'px';
+
+        const stageWidth = container.clientWidth;
+        const machineLeft = (stageWidth / 2) - 150;
+        const machineRight = (stageWidth / 2) + 120;
+
+        // Saat objek masuk ke dalam mesin
+        if (posX > machineLeft && posX < machineRight) {
+          el.style.opacity = '0.3'; // Efek samar saat di dalam mesin
+          
+          if (isFactualError) {
+            screen.classList.add('error-mode');
+            screen.innerText = `⚠️ AI SALAH PREDIKSI!\n${testItem.name} -> ${categoryNames[predictedCategory]}\n(Efek Data Latih Salah)`;
+          } else {
+            screen.classList.remove('error-mode');
+            screen.innerText = `PROSES MESIN AI:\n${testItem.name}\n-> ${categoryNames[predictedCategory]}`;
+          }
+        } else if (posX >= machineRight) {
+          el.style.opacity = '1';
         }
 
-        playSound('success');
-        screen.innerText = `PREDIKSI AI:\n${categoryNames[predictedCategory]}`;
+        // Saat objek sampai di ujung kanan (Keranjang)
+        if (posX > stageWidth - 260) {
+          clearInterval(moveInterval);
+          el.remove();
 
-        // Tambahkan ke keranjang hasil
-        const outBasket = document.getElementById('test-output-basket');
-        const badge = document.createElement('div');
-        badge.className = 'item-badge';
-        badge.innerText = `${currentTestItem.icon} (${currentTestItem.name})`;
-        outBasket.appendChild(badge);
+          // Masukkan item ke keranjang hasil
+          const targetBox = document.getElementById(`basket-fase3-${predictedCategory}`);
+          const boxWrapper = document.getElementById(`fase3-box-${predictedCategory}`);
 
-        setTimeout(prepareTestItem, 2500);
-      }, 1200);
+          if (targetBox) {
+            const badge = document.createElement('span');
+            badge.className = 'item-badge';
+            badge.innerText = testItem.icon;
+            badge.title = `${testItem.name} (Disortir AI ke: ${categoryNames[predictedCategory]})`;
+            targetBox.appendChild(badge);
+
+            if (isFactualError) {
+              playSound('wrong');
+              badge.style.border = '2px solid #ff1744';
+            } else {
+              playSound('success');
+            }
+
+            // Efek highlight keranjang
+            if (boxWrapper) {
+              boxWrapper.classList.add('highlight');
+              setTimeout(() => boxWrapper.classList.remove('highlight'), 800);
+            }
+          }
+        }
+      }, 25);
     }
 
     /* RESET ALL DATA */
@@ -908,16 +1028,16 @@
         userTrainedData = [];
         currentIndex = 0;
         
-        // Clear baskets
         categoriesList.forEach(cat => {
           const b1 = document.getElementById(`basket-fase1-${cat}`);
           const b2 = document.getElementById(`basket-fase2-${cat}`);
+          const b3 = document.getElementById(`basket-fase3-${cat}`);
           if (b1) b1.innerHTML = '';
           if (b2) b2.innerHTML = '';
+          if (b3) b3.innerHTML = '';
         });
-        const testBasket = document.getElementById('test-output-basket');
-        if (testBasket) testBasket.innerHTML = '';
 
+        stopAutoConveyor();
         switchPhase(1);
       }
     }
